@@ -58,6 +58,14 @@ body {
   text-shadow: none;
   word-wrap: break-word; }
 
+.reveal .red {
+  color: #de3423;
+}
+
+.reveal .blue2 {
+  color: #53CDEC;
+}
+
 .reveal h1 {
   color: #de3423;
   font-size: 2.5em;

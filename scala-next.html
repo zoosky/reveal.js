@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="css/theme/typesafe.css" id="theme">
 
   <!-- Code syntax highlighting -->
-  <link rel="stylesheet" href="lib/css/idea.css">
+  <link rel="stylesheet" href="lib/css/zenburn.css">
 
   <!-- Printing and PDF exports -->
   <script>
@@ -105,34 +105,209 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 
 <section>
 <section data-markdown><script type="text/template">
-# 2.12 in detail
+# 2.12
 ## [scala-lang.org/news/2.12-roadmap](scala-lang.org/news/2.12-roadmap)
 </script></section>
 
 <section data-markdown><script type="text/template">
-### Move to Java 8
-  - Be good JVM citizen, as always.
-  - Real benefits *require* Java 8
-     - INDY lambda
-     - default methods, fork-join
+# <3 Java 8
+  - λ: INDY, SAM
+  - `default` methods
+  - fork/join included
 </script></section>
 
 <section data-markdown><script type="text/template">
-### Legacy, long-term support
-  - Scala 2.11 & 2.12 match features (where possible on JDK 6)
-  - 2.12.0 (& last public 2.11.x) scheduled after Java 7 public EOL (2016)
+# Timeline
+  - [Q1 2016:](https://github.com/scala/scala/milestones) 2.12.0 & last *public* 2.11.x
+    - ... after Java 7 [public EOL](http://www.oracle.com/technetwork/java/eol-135779.html)
+  - 2.11 & 2.12 closely aligned
+    - modulo Java 6
 </script></section>
-</section>  
 
 
-Scala code: gist.github.com/adriaanm/892d6063dd485d7dd221 
-Original Java 8 code: github.com/winterbe/java8-tutorial
+<section data-markdown><script type="text/template">
+## `java.util.stream.Stream`
+```scala
+/* https://gist.github.com/adriaanm/892d6063dd485d7dd221
+Original Java 8 version: 
+http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
+
+$ scala -Xexperimental                                            */
+scala> import java.util.stream.{Stream, IntStream}
+scala> import java.util.{Arrays, List}
+
+// List<String> myList= Arrays.asList("a1", "a2", "b1", "c2", "c1");
+scala> val myList = Arrays.asList("a1", "a2", "b1", "c2", "c1")
+myList: java.util.List[String] = [a1, a2, b1, c2, c1]
+
+/*
+myList
+    .stream()
+    .filter(s -> s.startsWith("c"))
+    .map(String::toUpperCase)
+    .sorted()
+    .forEach(System.out::println);
+*/
+scala> myList.stream.
+         filter(_.startsWith("c")).
+         map(_.toUpperCase).
+         sorted.
+         forEach(println)
+C1
+C2
+
+/*
+Arrays.stream(new int[] {1, 2, 3})
+    .map(n -> 2 * n + 1)
+    .average()
+    .ifPresent(System.out::println);  // 5.0
+*/
+scala> Arrays.stream(Array(1, 2, 3)).
+         map(n => 2 * n + 1).average.ifPresent(println)
+5.0
+
+
+/*
+Stream.of("a1", "a2", "a3")
+    .map(s -> s.substring(1))
+    .mapToInt(Integer::parseInt)
+    .max()
+    .ifPresent(System.out::println);  // 3
+*/
+scala> Stream.of("a1", "a2", "a3").
+          map[String](_ substring 1).
+          mapToInt(Integer.parseInt).
+          max.
+          ifPresent(println)
+3
+
+// wildcard capture is tricky, whence the `map[String]` above
+scala> Stream.of("a1", "a2", "a3").map(_ substring 1)
+res: java.util.stream.Stream[?0] = ReferencePipeline$3@4ef37659
+
+/*
+Stream.of(1.0, 2.0, 3.0)
+    .mapToInt(Double::intValue)
+    .mapToObj(i -> "a" + i)
+    .forEach(System.out::println);
+*/
+scala> Stream.of(1.0, 2.0, 3.0).mapToInt(_.intValue).
+         mapToObj(i => "a" + i).forEach(println)
+a1
+a2
+a3
+
+/*
+Stream.of("d2", "a2", "b1", "b3", "c")
+    .filter(s -> {
+        System.out.println("filter: " + s);
+        return s.startsWith("a");
+    })
+    .sorted((s1, s2) -> {
+        System.out.printf("sort: %s; %s\n", s1, s2);
+        return s1.compareTo(s2);
+    })
+    .map(s -> {
+        System.out.println("map: " + s);
+        return s.toUpperCase();
+    })
+    .forEach(s -> System.out.println("forEach: " + s));
+*/
+scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { s =>
+           println("filter: " + s)
+           s.startsWith("a")
+       } sorted { (s1, s2) =>
+           println(f"sort: $s1%s; $s2%s\n")
+           s1.compareTo(s2)
+       } map { s =>
+           println("map: " + s)
+           s.toUpperCase
+       } forEach { s =>
+           println("forEach: " + s)
+       }
+filter: d2
+filter: a2
+filter: b1
+filter: b3
+filter: c
+map: a2
+forEach: A2
+```
+
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+## SAM Synthesis
+```scala
+scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { s => 
+         println(s"filter: $s"); true
+       }
+
+// Behind the scenes, scalac generated:
+scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { 
+    def test$body(s: String): Boolean = println(s"filter: $s"); true
+
+    new Predicate { def test(s: String): Boolean = test$body(s) }
+  }
+```
+
+</script></section>  
+
+<section data-markdown><script type="text/template">
+## Wily Wildcards
+```scala
+// wildcard capture is tricky, whence the `map[String]` above
+scala> Stream.of("a1", "a2", "a3").map(_ substring 1)
+res: java.util.stream.Stream[_ >: String] = ReferencePipeline$3@4ef37659
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Variance: user's problem?
+```java
+<R> Stream<R> map(Function<? super T, ? extends R> mapper)
+```
+
+```scala
+def map[R](mapper: T => R): Stream[R]
+```
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+### use-site variance
+```
+Function[_ >: T, _ <: R] 
+// given:
+trait Function[T, R]
+```
+
+### definition-site variance
+```
+Function1[T, R]
+// given:
+trait Function1[-T, +R]
+```
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+## 
+```scala
+```
+</script></section>
+
+
+
+</section>
 
 
 
 <section>
+
 <section data-markdown><script type="text/template">
-# Post-2.12 in detail
+# Post 2.12
 ## [scala-lang.org/news/roadmap-next](scala-lang.org/news/roadmap-next)
 </script></section>
 
@@ -158,6 +333,7 @@ Original Java 8 code: github.com/winterbe/java8-tutorial
   <script src="js/reveal.js"></script>
 
   <script>
+  console.log("boo")
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
@@ -174,7 +350,7 @@ Original Java 8 code: github.com/winterbe/java8-tutorial
         { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
         { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
         { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { initHLJS(); hljs.initHighlightingOnLoad(); } },
         { src: 'plugin/zoom-js/zoom.js', async: true },
         { src: 'plugin/notes/notes.js', async: true }
       ]
