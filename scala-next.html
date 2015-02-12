@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8">
 
-  <title>reveal.js - The HTML Presentation Framework</title>
+  <title>The Future of Scala</title>
 
-  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-  <meta name="author" content="Hakim El Hattab">
+  <meta name="description" content="The Future of Scala. Presented at Twitter, SF on Feb 17, 2015.">
+  <meta name="author" content="Adriaan Moors">
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -46,7 +46,7 @@
       </section>
 
       <section>
-         <h1 style="color:#de3423;">The Future of Scala</h1>
+         <h1>The Future of Scala</h1>
          <h3 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h3>
          <h4>Scala Team Lead</h4>
          <h4 style="margin-top:100px; opacity: 0.75">@twoffice -- Feb 17, 2015</h4>
@@ -57,24 +57,56 @@
 
 
 <section data-markdown><script type="text/template">
-## Community growth!
+# Community Growth!
       
 |             | commits 2.10 | commits 2.11 | everyone 2.10 | everyone 2.11|
 |-------------|--------------|--------------|---------------|--------------|
-|community    | 8%           | 22%          |  69           | 104          |
-|epfl         | 43%          | 23%          |  19           | 13           |
-|typesafe     | 49%          | 54%          |  22           | 22           |
-|all          | 4495         | 2582         |  110          | 139          |
+|  community  | 8%           | 22%          |  69           | 104          |
+|  epfl       | 43%          | 23%          |  19           | 13           |
+|  typesafe   | 49%          | 54%          |  22           | 22           |
+|  all        | 4495         | 2582         |  110          | 139          |
 
 ```
 git shortlog -sn --no-merges 2.11.x --not 2.10.x
 ```
 </script></section>
 
-
+<section>
 <section data-markdown><script type="text/template">
-## 2.12 Roadmap 
-#### [scala-lang.org/news/2.12-roadmap](scala-lang.org/news/2.12-roadmap)
+# Scala Roadmap 
+</script></section>
+<section data-markdown><script type="text/template">
+# 2.12
+## Compiler release
+ - Java 8
+ - New Optimizer
+</script></section>
+<section data-markdown><script type="text/template">
+# Aida
+## Library release
+ - Cleanup, simplify & shrink stdlib
+ - `scala.meta` (TODO: rewrite all the macros!)
+</script></section>
+<section data-markdown><script type="text/template">
+# Don Giovanni, pt 1
+## Rework back-end (see dotty)
+  - faster (phase fusion)
+  - improve binary compat
+</script></section>
+<section data-markdown><script type="text/template">
+# Don Giovanni, pt 2
+## Rework front-end (see dotty)
+  - remove deprecated syntax
+  - simpler foundations
+  - fewer puzzlers
+</script></section>
+</section>
+
+
+<section>
+<section data-markdown><script type="text/template">
+# 2.12 in detail
+## [scala-lang.org/news/2.12-roadmap](scala-lang.org/news/2.12-roadmap)
 </script></section>
 
 <section data-markdown><script type="text/template">
@@ -90,12 +122,24 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
   - Scala 2.11 & 2.12 match features (where possible on JDK 6)
   - 2.12.0 (& last public 2.11.x) scheduled after Java 7 public EOL (2016)
 </script></section>
-  
+</section>  
+
+
+Scala code: gist.github.com/adriaanm/892d6063dd485d7dd221 
+Original Java 8 code: github.com/winterbe/java8-tutorial
+
+
+
+<section>
+<section data-markdown><script type="text/template">
+# Post-2.12 in detail
+## [scala-lang.org/news/roadmap-next](scala-lang.org/news/roadmap-next)
+</script></section>
 
 
 
 
-
+</section>
 
 
 
