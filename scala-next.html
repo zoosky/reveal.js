@@ -111,9 +111,6 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 
 <section data-markdown><script type="text/template">
 # <3 Java 8
-  - λ: INDY, SAM
-  - `default` methods
-  - fork/join included
 </script></section>
 
 <section data-markdown><script type="text/template">
@@ -124,6 +121,30 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
     - modulo Java 6
 </script></section>
 
+
+<section data-markdown><script type="text/template">
+# INDY-λ 
+ 1. scalac λ bytecode mimics javac's
+ 1. ride JIT perf tuning wave
+ 1. profit
+</script></section>
+
+<section data-markdown><script type="text/template">
+# `default` methods
+  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
+  - Define Java 8 API in Scala
+  - Compile `trait` to `interface`
+    - Binary compat ftw
+    - Probably opt-in
+</script></section>
+
+<section data-markdown><script type="text/template">
+# SAM type conversion
+  - Scala λ assignable-to Java 8 λ
+  - Call Java 8 API from Scala
+  - TODO: Wildcards & type inference...
+
+</script></section>
 
 <section data-markdown><script type="text/template">
 ## `java.util.stream.Stream`
@@ -254,21 +275,25 @@ scala> Stream of ("d2", "a2", "b1", "b3", "c") filter {
 
 </script></section>  
 
-<section data-markdown><script type="text/template">
+<!-- <section data-markdown><script type="text/template">
 ## Wily Wildcards
 ```scala
 // wildcard capture is tricky, whence the `map[String]` above
 scala> Stream.of("a1", "a2", "a3").map(_ substring 1)
 res: java.util.stream.Stream[_ >: String] = ReferencePipeline$3@4ef37659
 ```
-</script></section>
+</script></section> -->
+
 
 <section data-markdown><script type="text/template">
-## Variance: user's problem?
+## Expressing function subtyping
+
+#### Java: `Function`'s users must juggle wildcards
 ```java
 <R> Stream<R> map(Function<? super T, ? extends R> mapper)
 ```
 
+#### Scala: variance at `=>`'s definition took care of it
 ```scala
 def map[R](mapper: T => R): Stream[R]
 ```
@@ -276,28 +301,41 @@ def map[R](mapper: T => R): Stream[R]
 
 
 <section data-markdown><script type="text/template">
-### use-site variance
-```
-Function[_ >: T, _ <: R] 
-// given:
-trait Function[T, R]
-```
+## Variance
 
-### definition-site variance
-```
-Function1[T, R]
-// given:
-trait Function1[-T, +R]
-```
+|     definition      |   ensuring fun subtyping |
+|---------------------|--------------------------|
+| `trait =>[-T, +R]`  | `=>[Arg, Res]`           |
+| `trait F[T, R]`   <!-- .element: class="fragment" data-fragment-index="1" -->  | `F[_ >: Arg, _ <: Res]`  <!-- .element: class="fragment" data-fragment-index="1" -->  |
+
 
 </script></section>
+
 
 <section data-markdown><script type="text/template">
-## 
-```scala
-```
+## Natural subtyping for functions
+
+`BetterArg => BetterRes <: Arg => Res`
+
+`<=>`
+
+`BetterArg >: Arg ` `/\` `BetterRes <: Res`
+
 </script></section>
 
+
+<section data-markdown><script type="text/template">
+## Wildcard subtyping for functions
+
+`F[_ >: BetterArg, _ <: BetterRes]`
+
+`<: F[_ >: Arg, _ <: Res]`
+
+`<=>`
+
+`BetterArg >: Arg` `/\` `BetterRes <: Res`
+
+</script></section>
 
 
 </section>
@@ -305,14 +343,71 @@ trait Function1[-T, +R]
 
 
 <section>
-
 <section data-markdown><script type="text/template">
-# Post 2.12
+# Aida
 ## [scala-lang.org/news/roadmap-next](scala-lang.org/news/roadmap-next)
 </script></section>
 
+<section data-markdown><script type="text/template">
+# Simpler Core Library
+  - Composition over inheritance
+  - Move out // collections and views
+  - Caveat Inheritor Collectionis
+    - 99% of users need not worry
+</script></section>
 
 
+<section data-markdown><script type="text/template">
+# Modules
+  - Lazy collections (interop with Java Stream)
+  - Parallel collections (multiple impls: scala-blitz & Java 8)
+  - Validation
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+# Macros: `scala.meta`
+  - Prototype, default in Don Giovanni
+  - Complete rewrite!
+  - Only use macros when all else fails...
+</script></section>
+</section>
+
+
+
+
+<section>
+<section data-markdown><script type="text/template">
+# Don Giovanni
+## [scala-lang.org/news/roadmap-next](scala-lang.org/news/roadmap-next)
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Refactor compiler
+ - Inspired by dotty incubator
+ - Focus on ease of migration, bang for buck
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Simpler syntax
+ - Drop procedure syntax (always: `kw name sig [= body]`)
+ - So long, XML literals (string interpolation)
+ - Trait parameters (drop early definitions)
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Simpler semantics
+ - Type members model type constructors, existentials,...
+ - No more lub blow-ups (union types as lazy lubs)
+ - Built-in support for some of shapeless (`HList/HMap`)
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Binary Compatibility
+ - Serialize typed ASTs
+ - Recompile dependencies
+ - source & binary compatibility coincide
+</script></section>
 
 </section>
 
@@ -333,7 +428,6 @@ trait Function1[-T, +R]
   <script src="js/reveal.js"></script>
 
   <script>
-  console.log("boo")
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
@@ -350,7 +444,7 @@ trait Function1[-T, +R]
         { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
         { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
         { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { initHLJS(); hljs.initHighlightingOnLoad(); } },
+        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
         { src: 'plugin/zoom-js/zoom.js', async: true },
         { src: 'plugin/notes/notes.js', async: true }
       ]
