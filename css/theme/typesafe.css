@@ -19,8 +19,11 @@ Play Framework Green #92d13d
 Akka Blue #15a9ce
 Scala Red #de3423*/
 
-section.has-light-background, section.has-light-background h1, section.has-light-background h2, section.has-light-background h3, section.has-light-background h4, section.has-light-background h5, section.has-light-background h6 {
+/*section.has-light-background, section.has-light-background h1, section.has-light-background h2, section.has-light-background h3, section.has-light-background h4, section.has-light-background h5, section.has-light-background h6 {
   color: #222; }
+*/
+
+
 
 /*********************************************
  * GLOBAL STYLES
@@ -70,6 +73,24 @@ body {
   color: #de3423;
   font-size: 2.5em;
 }
+
+section.scaladays h1 {
+  color: #FF5754;
+  font-size: 2.5em;
+}
+
+section.scaladays a {
+  color: #FF5754;
+  text-decoration: none;
+  font-size: .9em;
+  -webkit-transition: color 0.15s ease;
+  -moz-transition: color 0.15s ease;
+  transition: color 0.15s ease; }
+
+section.scaladays a:hover {
+  color: #FF8784;
+  text-shadow: none;
+  border: none; }
 
 .reveal h2 {
   font-size: 1.6em; }
