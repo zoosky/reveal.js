@@ -91,6 +91,8 @@ section.scaladays a:hover {
   color: #FF8784;
   text-shadow: none;
   border: none; }
+  
+.lightblue { color: #53CDEC;}
 
 .reveal h2 {
   font-size: 1.6em; }

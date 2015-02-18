@@ -50,7 +50,7 @@
 
       <section data-markdown data-background="#7FDFF9" class="scaladays"><script type="text/template">
 # Promo code: `sfscala`
-  - Discounted rate: $750
+  - Discounted rate: **$750**
   - Discounted Scala training (combined w/ Scala Days ticket)
     - Fast Tracks to: Scala / Akka / Play
     - Advanced Akka
@@ -59,7 +59,11 @@
 
       <section data-markdown data-background="#7FDFF9" class="scaladays"><script type="text/template">
 # Free Ticket Raffle!
-      </script></section>
+## [goo.gl/yoV5bB](http://goo.gl/yoV5bB)
+#### adriaanm.github.io/reveal.js/scala-next.html#/2
+<img src="http://chart.googleapis.com/chart?cht=qr&chs=300x300&choe=UTF-8&chld=H&chl=http://goo.gl/yoV5bB"/>
+      </script></section>      
+<!-- http://goo.gl/#analytics/goo.gl/yoV5bB/all_time -->
 
       <section>
          <img src="images/typesafe_color_reverse.svg" title="Typesafe" width="66%"></img>
@@ -70,7 +74,7 @@
          <h3 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h3>
          <h4>Scala Team Lead</h4>
          <h4 style="margin-top:100px; opacity: 0.75">@twoffice -- Feb 17, 2015</h4>
-         <h4> adriaanm.github.io/reveal.js/scala-next.html </h4>
+         <h4 style="opacity: 0.75">adriaanm.github.io/reveal.js/scala-next.html</h4>
       </section>
 
 
@@ -80,12 +84,14 @@
 <section data-markdown><script type="text/template">
 # Community Growth!
       
-|             | commits 2.10 | commits 2.11 | everyone 2.10 | everyone 2.11|
+|             | commits 2.10 | <span class="lightblue">commits 2.11</span> | everyone 2.10 | <span class="lightblue">everyone 2.11</span>|
 |-------------|--------------|--------------|---------------|--------------|
-|  community  | 8%           | 22%          |  69           | 104          |
-|  epfl       | 43%          | 23%          |  19           | 13           |
-|  typesafe   | 49%          | 54%          |  22           | 22           |
-|  all        | 4495         | 2582         |  110          | 139          |
+|  community  | 8%           | <span class="lightblue">&times; 3    </span>|  69           | <span class="lightblue">&times; 1.5  </span>|
+|  epfl       | 43%          | <span class="lightblue">&divide; 2   </span>|  19           | <span class="lightblue">&divide; 1.5 </span>*<sup>✨</sup>*|
+|  typesafe   | 49%          | <span class="lightblue">&times; 1.1  </span>|  22           | <span class="lightblue">&times; 1    </span>|
+|  all        | 4495         | <span class="lightblue">&divide; 1.7 </span>|  110          | <span class="lightblue">&times; 1.26 </span>|
+
+*<sup>✨</sup>* core team stable at 4 (EPFL & Typesafe)
 
 ```
 git shortlog -sn --no-merges 2.11.x --not 2.10.x
@@ -95,31 +101,35 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 <section>
 <section data-markdown><script type="text/template">
 # Scala Roadmap 
+## Overview
 </script></section>
 <section data-markdown><script type="text/template">
 # 2.12
 ## Compiler release
  - Java 8
  - New Optimizer
+ - Q1 2016
 </script></section>
 <section data-markdown><script type="text/template">
 # Aida
 ## Library release
  - Cleanup, simplify & shrink stdlib
- - `scala.meta` (TODO: rewrite all the macros!)
+ - Invite community modules
+ - `scala.meta` &nbsp;&nbsp;  *//&nbsp;&nbsp;TODO: rewrite all the macros!*
+ - (&#177;12 months after 2.12.3; 18 month cycle)
 </script></section>
 <section data-markdown><script type="text/template">
-# Don Giovanni, pt 1
-## Rework back-end (see dotty)
+# Don Giovanni, act 1
+## Rework back-end (see [dotty](https://github.com/lampepfl/dotty))
   - faster (phase fusion)
-  - improve binary compat
+  - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M)
 </script></section>
 <section data-markdown><script type="text/template">
-# Don Giovanni, pt 2
-## Rework front-end (see dotty)
+# Don Giovanni, act 2
+## Rework front-end (see [dotty](https://github.com/lampepfl/dotty))
   - remove deprecated syntax
   - simpler foundations
-  - fewer puzzlers
+  - fewer [puzzlers](http://www.amazon.com/Scala-Puzzlers-Andrew-Phillips/dp/0981531679) (sorry, Andrew & Nermin)
 </script></section>
 </section>
 
@@ -372,9 +382,9 @@ def map[R](mapper: T => R): Stream[R]
 <section data-markdown><script type="text/template">
 # Simpler Core Library
   - Composition over inheritance
-  - Move out // collections and views
+  - Move out parallel collections & views
   - Caveat Inheritor Collectionis
-    - 99% of users need not worry
+    - 99% of users need not worry, though
 </script></section>
 
 
@@ -405,15 +415,18 @@ def map[R](mapper: T => R): Stream[R]
 
 <section data-markdown><script type="text/template">
 # Refactor compiler
- - Inspired by dotty incubator
+ - Inspired by [dotty](https://github.com/lampepfl/dotty) incubator
  - Focus on ease of migration, bang for buck
 </script></section>
 
 <section data-markdown><script type="text/template">
 # Simpler syntax
- - Drop procedure syntax (always: `kw name sig [= body]`)
- - So long, XML literals (string interpolation)
- - Trait parameters (drop early definitions)
+ - Drop procedure syntax
+   - all definitions: `kw name sig [= body]`
+ - So long, XML literals!
+   - `xml""<hello/>"""`
+ - Anyone ever use early definitions?
+   - introducing: trait parameters
 </script></section>
 
 <section data-markdown><script type="text/template">
@@ -427,7 +440,8 @@ def map[R](mapper: T => R): Stream[R]
 # Binary Compatibility
  - Serialize typed ASTs
  - Recompile dependencies
- - source & binary compatibility coincide
+ - Source & binary compatibility coincide
+ - See [Martin's talk](https://www.youtube.com/watch?v=g1Pqyskjx8M)
 </script></section>
 
 </section>
@@ -441,6 +455,14 @@ def map[R](mapper: T => R): Stream[R]
          <H1>Questions!</H1>
       </section>
 
+      <section data-markdown data-background="#7FDFF9" class="scaladays"><script type="text/template">
+# Raffle!
+## [Responses](https://docs.google.com/a/typesafe.com/forms/d/1y9fE64mYUrE46QTXveGjb_xHPFBZ0MHh8pCjKXYUadY/edit)
+## An Innocent Hand...
+```
+def innocentHand(count: Int) = util.Random.nextInt(count) + 5
+```
+      </script></section>
     </div>
 
   </div>
