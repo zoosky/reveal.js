@@ -57,23 +57,41 @@
 
 
 
+<section>
 
 <section data-markdown><script type="text/template">
-# Community Growth!
-      
-|             | commits 2.10 | <span class="lightblue">commits 2.11</span> | everyone 2.10 | <span class="lightblue">everyone 2.11</span>|
-|-------------|--------------|--------------|---------------|--------------|
-|  community  | 8%           | <span class="lightblue">&times; 3    </span>|  69           | <span class="lightblue">&times; 1.5  </span>|
-|  epfl       | 43%          | <span class="lightblue">&divide; 2   </span>|  19           | <span class="lightblue">&divide; 1.5 </span>*<sup>✨</sup>*|
-|  typesafe   | 49%          | <span class="lightblue">&times; 1.1  </span>|  22           | <span class="lightblue">&times; 1    </span>|
-|  all        | 4495         | <span class="lightblue">&divide; 1.7 </span>|  110          | <span class="lightblue">&times; 1.26 </span>|
-
-*<sup>✨</sup>* core team stable at 4 (EPFL & Typesafe)
-
-```
-git shortlog -sn --no-merges 2.11.x --not 2.10.x
-```
+# Community!
+- Key to our success
+- Investments:
+  - Simplify process
+  - Infrastructure (CI on EC2, standardize build,...)
+    - contribute from browser!
+  - Modularization (more to come in 2.13)
+    - community owned (merge PRs, push tag to release)
 </script></section>
+
+<section data-markdown><script type="text/template">
+# Growth!
+- Contributors
+  - Community: 1/4th of 2.11 (**&times; 3 since 2.10!**)
+  - EPFL: 1/4th as well
+  - Typesafe: half (team of 4)
+- PRs merged
+  - 2.11: 51 per month (from 43 in 2.10)
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Thank you!
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Have fun!
+## Let me know how I can help
+</script></section>
+
+
+</section>
+
 
 <section>
 <section data-markdown><script type="text/template">
@@ -83,8 +101,10 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 <section data-markdown><script type="text/template">
 # 2.12
 ## Compiler release
- - Java 8
- - New Optimizer
+ - Java 8 <small>(λ, SAM, `default`)</small>
+ - New Optimizer <small>(based on Miguel Garcia's work)</small>
+ - Abide <small>(time permitting)</small>
+ - Set scene for library cleanups
  - Q1 2016
 </script></section>
 <section data-markdown><script type="text/template">
@@ -98,6 +118,7 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 <section data-markdown><script type="text/template">
 # Don Giovanni, act 1
 ## Rework back-end (see [dotty](https://github.com/lampepfl/dotty))
+  - (keep front-end)
   - faster (phase fusion)
   - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M)
 </script></section>
@@ -113,12 +134,8 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 
 <section>
 <section data-markdown><script type="text/template">
-# 2.12
+# 2.12 <3 Java 8
 ## [scala-lang.org/news/2.12-roadmap](http://scala-lang.org/news/2.12-roadmap)
-</script></section>
-
-<section data-markdown><script type="text/template">
-# <3 Java 8
 </script></section>
 
 <section data-markdown><script type="text/template">
@@ -131,7 +148,8 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 
 
 <section data-markdown><script type="text/template">
-# INDY-λ 
+# INDY-λ
+#### 2.11.7, 2.12.0-M2
  1. scalac λ bytecode mimics javac's
  1. ride JIT perf tuning wave
  1. profit
@@ -139,6 +157,7 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 
 <section data-markdown><script type="text/template">
 # `default` methods
+#### 2.12.0-M3
   - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
   - Define Java 8 API in Scala
   - Compile `trait` to `interface`
@@ -147,11 +166,14 @@ git shortlog -sn --no-merges 2.11.x --not 2.10.x
 </script></section>
 
 <section data-markdown><script type="text/template">
-# SAM type conversion
+# Single Abstract Method
+#### 2.11.5 (`-Xexperimental`)
   - Scala λ assignable-to Java 8 λ
   - Call Java 8 API from Scala
-  - TODO: Wildcards & type inference...
-
+  - TODO
+    - Better type inference with Java wildcards...
+    - Spec
+    - Also use INDY?
 </script></section>
 
 <section data-markdown><script type="text/template">
@@ -292,20 +314,52 @@ res: java.util.stream.Stream[_ >: String] = ReferencePipeline$3@4ef37659
 ```
 </script></section> -->
 
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# FP >> λs
+## (A brief rant)
+</script></section>
 
 <section data-markdown><script type="text/template">
-## Expressing function subtyping
+### Define, compose and understand small units of abstraction over known set of types
+#### (OO's complement)
+</script></section>
 
-#### Java: `Function`'s users must juggle wildcards
+<section data-markdown><script type="text/template">
+## Express, Understand & Refactor
+  - immutable first (val <> var, expr <> stmt, recursion)
+  - pattern matching (analysis of input determines output)
+  - local methods (divide & conquer)
+  - (de)compose safely, guided by types
+  - type inference (best types are unseen -- e.g., definition-site variance)
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Function subtyping
+
+#### Java: `Function`'s users must encode expected subtyping
 ```java
 <R> Stream<R> map(Function<? super T, ? extends R> mapper)
 ```
 
-#### Scala: variance at `=>`'s definition took care of it
+#### Scala: `=>` said how type arguments determine subtyping
 ```scala
 def map[R](mapper: T => R): Stream[R]
 ```
+
+
 </script></section>
+
+<!-- <section data-markdown><script type="text/template">
+## Function subtyping
+"Produce a new `Stream` with elements `: R`, for any `R` -- my elements being of type `T`, provided..."
+
+#### Java:
+#### Scala: a function from `T` to `R`
+
+</script></section> -->
 
 
 <section data-markdown><script type="text/template">
@@ -367,7 +421,7 @@ def map[R](mapper: T => R): Stream[R]
 
 <section data-markdown><script type="text/template">
 # Modules
-  - Lazy collections (interop with Java Stream)
+  - Lazy collections (interop with Java 8 Streams)
   - Parallel collections (multiple impls: scala-blitz & Java 8)
   - Validation
 </script></section>
@@ -415,7 +469,7 @@ def map[R](mapper: T => R): Stream[R]
 
 <section data-markdown><script type="text/template">
 # Binary Compatibility
- - Serialize typed ASTs
+ - Serialize Typed ASTs
  - Recompile dependencies
  - Source & binary compatibility coincide
  - See [Martin's talk](https://www.youtube.com/watch?v=g1Pqyskjx8M)
