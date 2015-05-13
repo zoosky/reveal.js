@@ -24,8 +24,8 @@ page.viewportSize = {
 // paper width of 1920px actually results in a 756px wide
 // PDF.
 page.paperSize = {
-	width: Math.round( slideWidth * 2 ),
-	height: Math.round( slideHeight * 2 ),
+	width: Math.round( slideWidth ),
+	height: Math.round( slideHeight  ),
 	border: 0
 };
 
