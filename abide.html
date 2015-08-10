@@ -1,0 +1,120 @@
+# Acknowledgements
+  - Nicolas Voirol (@samarion): actual work (internship @ Typesafe Switzerland)
+  - Iulian Dragos (@dragos): borrowed some slides
+
+
+# Abide
+  - Customizable *Type* Checker
+  - Formatting: Abide Doesn't Care
+
+
+# Related Tools
+  - Linter (hairyfotr/linter)
+  - WartRemover (puffnfresh/wartremover)
+  - scapegoat (sksamuel/scalac-scapegoat-plugin)
+  - (scalastyle/scalariform)
+
+
+# Usage
+  - During Local Build (sbt/IDE/...)
+  - Code Review Comments (Codacy)
+  - Metrics / Dashboard
+
+
+# Rules
+  - Hone In Syntactically
+  - Decide Semantically
+
+
+# Rules Change
+  - Over Time
+  - Across Teams
+  - Specific to Library
+
+
+# Platform's on Us
+  - Built on Scala Compiler
+  - Fast & Fused AST Traversal
+  - Common Semantic Checks
+
+
+# Limitations
+  - No code flow sensitivity
+  - No aliasing/separation
+  - No automated reasoning
+
+
+# Community
+  - Contribute at scala/scala-abide!
+  - Rules
+  - Integration with Tooling, Reporting,..
+
+
+# Example Rules
+  - Renamed Arguments with Defaults
+  - Private Field in Trait
+  - Unused Private Member
+  - `match` on `Seq` with `::`
+
+
+# Sbt Integration
+  - Add plugin:
+```
+addSbtPlugin("com.typesafe" % "sbt-abide" % "0.1.0")
+```
+
+  - Depend on rules in "abide" configuration (like "test"):
+```
+libraryDependencies += "com.typesafe" %% "abide-core"  % "0.1.0" % "abide"
+libraryDependencies += "com.typesafe" %% "abide-extra" % "0.1.0" % "abide"
+```
+
+
+# Closer look
+  - Abide Architecture 
+  - Quasiquotes
+  - Useful Semantic Methods
+  - Example
+
+
+# Architecture
+## Traverser
+  - Fused: one-pass for all rules
+  - Optimised: rules are filtered on what they match
+
+
+# Architecture
+## Directive
+ - Shared context between rules
+   - access to compiler
+   - rule-specific state
+
+
+# Architecture
+## Rule
+  - Partial Function `Tree => Unit`
+  - "Existential Rule": Find Rule Violation
+    - `nok`: potentially breaks rule
+    - `ok`: removes potential violation
+
+
+# Example
+## No Assignment to `var`
+```
+  val step = {
+    case varDef @ q"$mods var $name : $tpt = $value" =>
+      nok(varDef.symbol, Warning(varDef))
+    case q"$rcv = $expr" =>
+      ok(rcv.symbol)
+  }
+```
+
+# Trees, Symbols & Types
+  - Match tree's shape with quasiquote
+  - Tree's symbol links references to definition
+  - Symbol's type (`sym.info`): signature
+  - Symbol's owner tracks definition nesting
+  - Type (`tree.tpe`) classifies expression's result
+  
+  
+ 
