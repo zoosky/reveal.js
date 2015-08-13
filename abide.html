@@ -1,62 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Does Your Scala Abide?</title>
+
+  <meta name="description" content="Scala Abide is a lint checker for Scala. Presented at Scala by the Bay on Aug 14, 2015.">
+  <meta name="author" content="Adriaan Moors">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/typesafe.css" id="theme">
+
+  <!-- Code syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="reveal">
+<div class='footer'><img style="height:1.5em; opacity: 0.66" src="images/typesafe_reverse.svg" title="Typesafe"/><span style="opacity:0.66;text-color:white;position:absolute;top:20%;right:-80%">@adriaanm</span></div>
+<div class="slides">
+
+<section>
+  <h1>Does Your Scala Abide?</h1>
+  <h4 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h4>
+  <h5>Scala Team Lead</h5>
+  <h5 style="opacity: 0.75">adriaanm.github.io/reveal.js/abide.html</h5>
+</section>
+
+<section>
+   <img src="images/typesafe_color_reverse.svg" title="Typesafe" width="66%"></img>
+</section>
+
+
+<section data-markdown><script type="text/template">
 # Acknowledgements
-  - Nicolas Voirol (@samarion): actual work (internship @ Typesafe Switzerland)
-  - Iulian Dragos (@dragos): borrowed some slides
+  - Nicolas Voirol (@samarion): actual work<br><small>great internship at Typesafe Switzerland</small>
+  - Iulian Dragos (@dragos): borrowed some slides<br><small>Thanks!</small>
+</script></section>
 
-
-# Abide
-  - Customizable *Type* Checker
-  - Formatting: Abide Doesn't Care
-
-
+<section data-markdown><script type="text/template">
 # Related Tools
-  - Linter (hairyfotr/linter)
-  - WartRemover (puffnfresh/wartremover)
-  - scapegoat (sksamuel/scalac-scapegoat-plugin)
-  - (scalastyle/scalariform)
+  - Linter      [hairyfotr/linter](https://github.com/hairyfotr/linter)
+  - WartRemover [puffnfresh/wartremover](https://github.com/puffnfresh/wartremover)
+  - scapegoat   [sksamuel/scalac-scapegoat-plugin](https://github.com/sksamuel/scalac-scapegoat-plugin)
+  - *not really*  ([scalastyle/scalariform](https://github.com/scalastyle/scalariform))
+</script></section>
 
 
+<section data-markdown><script type="text/template">
+# Abide
+  - Your own, picky *type* checker
+  - FoRmaTtInG: abide Doesn't Care
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Today
+  - Why abide?
+  - How to abide?
+  - Please contribide?
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+# Platform's On Us
+  - Built on Scala compiler
+  - Fast & Fused AST traversal
+  - Common semantic checks
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Mores Change
+  - Over time
+  - Across teams
+  - Tuned to library
+</script></section>
+
+<section data-markdown><script type="text/template">
 # Usage
-  - During Local Build (sbt/IDE/...)
-  - Code Review Comments (Codacy)
+  - During local build (sbt/IDE/...)
+  - Code review (Codacy)
   - Metrics / Dashboard
+</script></section>
 
 
+
+<section data-markdown><script type="text/template">
 # Rules
-  - Hone In Syntactically
-  - Decide Semantically
+  - Hone in syntactically
+  - Decide semantically
+</script></section>
 
-
-# Rules Change
-  - Over Time
-  - Across Teams
-  - Specific to Library
-
-
-# Platform's on Us
-  - Built on Scala Compiler
-  - Fast & Fused AST Traversal
-  - Common Semantic Checks
-
-
-# Limitations
-  - No code flow sensitivity
-  - No aliasing/separation
-  - No automated reasoning
-
-
-# Community
-  - Contribute at scala/scala-abide!
-  - Rules
-  - Integration with Tooling, Reporting,..
-
-
+<section data-markdown><script type="text/template">
 # Example Rules
   - Renamed Arguments with Defaults
   - Private Field in Trait
   - Unused Private Member
   - `match` on `Seq` with `::`
+</script></section>
 
+<section data-markdown><script type="text/template">
+# Limitations
+  - No code flow sensitivity
+  - No aliasing/separation
+  - No automated reasoning
+</script></section>
 
+<section data-markdown><script type="text/template">
 # Sbt Integration
   - Add plugin:
 ```
@@ -68,53 +135,226 @@ addSbtPlugin("com.typesafe" % "sbt-abide" % "0.1.0")
 libraryDependencies += "com.typesafe" %% "abide-core"  % "0.1.0" % "abide"
 libraryDependencies += "com.typesafe" %% "abide-extra" % "0.1.0" % "abide"
 ```
+</script></section>
 
-
+<section data-markdown><script type="text/template">
 # Closer look
-  - Abide Architecture 
-  - Quasiquotes
-  - Useful Semantic Methods
-  - Example
+  - Abidesign
+  - :mushroom:
+  - Demo
+</script></section>
 
+<section>
 
-# Architecture
+<section data-markdown><script type="text/template">
+# Design
+</script></section>
+
+<section data-markdown><script type="text/template">
 ## Traverser
   - Fused: one-pass for all rules
   - Optimised: rules are filtered on what they match
+</script></section>
 
-
-# Architecture
+<section data-markdown><script type="text/template">
 ## Directive
  - Shared context between rules
    - access to compiler
    - rule-specific state
+</script></section>
 
-
-# Architecture
+<section data-markdown><script type="text/template">
 ## Rule
   - Partial Function `Tree => Unit`
-  - "Existential Rule": Find Rule Violation
+  - "Existential Rule": find rule violation
     - `nok`: potentially breaks rule
     - `ok`: removes potential violation
+</script></section>
+</section>
 
+<section>
+<section data-markdown><script type="text/template">
+# :mushroom:
+</script></section>
 
-# Example
-## No Assignment to `var`
+<section data-markdown><script type="text/template">
+## :power up!
 ```
-  val step = {
-    case varDef @ q"$mods var $name : $tpt = $value" =>
-      nok(varDef.symbol, Warning(varDef))
-    case q"$rcv = $expr" =>
-      ok(rcv.symbol)
-  }
-```
+$ scala
+Welcome to Scala version 2.11.7 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_20-ea).
+Type in expressions to have them evaluated.
+Type :help for more information.
 
-# Trees, Symbols & Types
-  - Match tree's shape with quasiquote
-  - Tree's symbol links references to definition
-  - Symbol's type (`sym.info`): signature
-  - Symbol's owner tracks definition nesting
-  - Type (`tree.tpe`) classifies expression's result
-  
-  
- 
+scala> :power
+** Power User mode enabled - BEEP WHIR GYVE **
+** :phase has been set to 'typer'.          **
+** scala.tools.nsc._ has been imported      **
+** global._, definitions._ also imported    **
+** Try  :help, :vals, power.<tab>           **
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Tree, meet Quasiquote
+```scala
+scala> val q"$mods def $name[..$t](..$a) = $rhs" =
+           q"private def identity[T](x: T) = x"
+mods: $r.intp.global.Modifiers = Modifiers(private, , Map())
+name: $r.intp.global.TermName = identity
+t: List[$r.intp.global.TypeDef] = List(type T)
+a: List[$r.intp.global.ValDef] = List(val x: T = _)
+rhs: $r.intp.global.Tree = x
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Oh, Glorious Tree!
+```scala
+scala> showRaw(q"private def identity[T](x: T) = x")
+res4: String = DefDef(Modifiers(PRIVATE),
+TermName("identity"),
+List(TypeDef(Modifiers(PARAM), TypeName("T"), List(),
+             TypeBoundsTree(EmptyTree, EmptyTree))
+    ),
+List(List(ValDef(Modifiers(PARAM), TermName("x"),
+                 Ident(TypeName("T")), EmptyTree)
+          )),
+TypeTree(),
+Ident(TermName("x")))
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## type checking (light)
+```scala
+import analyzer._
+def typed(t: Tree) = {
+  val ctx = newNamer(rootContext(NoCompilationUnit)).enterSym(t)
+  newTyper(ctx).typed(t)
+}
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## type checking: example
+```scala
+scala> val Ctree = typed(q"class C { def foo = 1; def bar = foo }")
+Ctree: global.Tree =
+class C extends scala.AnyRef {
+  def <init>(): C = {
+    C.super.<init>();
+    ()
+  };
+  def foo: Int = 1;
+  def bar: Int = C.this.foo
+}
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Symbol's type (`sym.info`): signature
+```scala
+scala> val Cinfo = Ctree.symbol.info
+Cinfo: global.Type =
+AnyRef {
+  def <init>(): C
+  def foo: Int
+  def bar: Int
+}
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## From reference to definition
+```scala
+scala> val fooSym = Cinfo.nonPrivateMember(TermName("foo"))
+fooSym: global.Symbol = method foo
+
+scala> val barTpt = Ctree.collect {
+  case q"def $m: $tpt = $rhs"
+    if rhs.symbol eq fooSym => rhs.tpe
+  }.head
+barTpt: $r.intp.global.Type = Int
+```
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+## Symbol's owner tracks definition nesting
+```scala
+scala> bar.ownerChain foreach println
+method bar
+class C
+package <root>
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Type (`tree.tpe`) classifies expression's result
+```scala
+scala> val constOne = typed(q"1").tpe
+constOne: global.Type = Int(1)
+
+scala> val wide = constOne.widen
+wide: global.Type = Int
+```
+</script></section>
+
+
+<section data-markdown><script type="text/template">
+## Extra credit
+### `baseType`, `memberType`
+```scala
+scala> val mapAtIter =
+  typeOf[Map[Int, String]].baseType(IterableClass)
+mapAtIter: Type = Iterable[(Int, String)]
+
+scala> val AinIter =
+  typeOf[Map[Int, String]].memberType(IterableClass.typeParams.head)
+AinIter: Type = (Int, String)
+```
+</script></section>
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Demo
+</script></section>
+</section>
+
+<section data-markdown><script type="text/template">
+# Thanks! Questions!
+## Please contribute: [scala/scala-abide](https://github.com/scala/scala-abide)
+  - More rules
+  - Tooling integration
+  - Reporting (config'able, graphical)
+</script></section>
+
+</div></div>
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+<script>
+   // Full list of configuration options available at:
+   // https://github.com/hakimel/reveal.js#configuration
+   Reveal.initialize({
+     controls: true,
+     progress: true,
+     slideNumber: true,
+     history: true,
+     center: true,
+     help: true,
+     transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+     // Optional reveal.js plugins
+     dependencies: [
+       { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+       { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+       { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+       { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
+       { src: 'plugin/zoom-js/zoom.js', async: true },
+       { src: 'plugin/notes/notes.js', async: true }
+     ]
+   });
+</script>
+</body>
+</html>
