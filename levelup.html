@@ -52,13 +52,18 @@
 <section data-markdown><script type="text/template">
 # Disclaimer
 
-The information presented here is for **inspirational** purposes only and certainly contains omissions, though *likely no major spelling mistakes*. It is subject to change and may be rendered inaccurate for many reasons, including but not limited to sudden changes of heart and/or mind, as well as **your feedback**, during, before and/or after this talk.
+The information presented here is <br>for **inspirational purposes only**, and <br> certainly contains omissions, <br> though *likely no major spelling gaffes*. 
+
+It is subject to change and may be rendered inaccurate for many reasons, including but not limited to sudden changes of heart and/or mind, and <br>**your feedback**,<br> during, before and/or after this talk.
 </script></section>
 
 
 <section>
 <section data-markdown><script type="text/template">
 # Type-Level Prolog Anyone?
+</script></section>
+
+<section data-markdown><script type="text/template">
 Every Scala compiler contains a poorly specified and inefficiently implemented Prolog engine to resolve your implicit magic.
 </script></section>
 
@@ -136,8 +141,8 @@ final class Z extends Nat ; final class S[T <: Nat] extends Nat
 <section data-markdown><script type="text/template">
 ### Lift Literal Values to Types
 ### Opaque Type Members
-### Total Matching on Types
 ### Implicit Types
+### Total Matching on Types
 </script></section>
 </section>
 
@@ -178,7 +183,7 @@ x: 3 = 3
 <section data-markdown><script type="text/template">
 ## Opaque type members
 ```
-class C { type T <: Int = 1 }
+class C { type T <: Int = 1 } // but what does it mean?!?
 ```
 </script></section>
 
@@ -219,41 +224,85 @@ class D { override type T <: Int = 2 }
 <section>
 <section data-markdown><script type="text/template">
 # Implicit Types
+  - Implicits are great — iff quiet — workers.
+  - Pass value witness, identified by type
+  - Hmmmmm......
+</script></section>
 
-when implicit, behind the scenes, we lower the RHS to a value member, 
-and pass it along when it is inferred, just like implicits
+<section data-markdown><script type="text/template">
+# Achieving Precision
+  - Create witness when type precisely known
+  - Pass it along to consumer
+  - Profit`^H^H^H^H`ecision!
+</script></section>
 
+<section data-markdown><script type="text/template">
+# Precision via implicits 
 ```
-class C { implicit type T <: Int = 1 ; def foo(implicit x: T) }
+class C { implicit type T <: Int = 1 }
 ```
-becomes (conceptually! the lowering isn't expressible in general; when no value can be derived, the implicit search fails)
-```
-class C { type T <: Int ; implicit val T = 1 ; def foo(implicit x: T) }
-```
-so that `foo` --> `foo(T)`
 
+### Corresponds to:
+```
+class C { type T <: Int = 1; implicit def T: T = valueOf[T] }
+```
+
+### Statically expanded:
+```
+class C { type T <: Int = 1; implicit def T: T = 1 }
+```
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Precision via implicits 
+```
+def foo(x: C)(implicit w: x.T) = println(w)
+
+foo(new C) // prints 1
+foo(new D) // prints 2
+```
+
+### Because expansion:
+```
+val c = new C ; foo(c)(c.T)
+val d = new D ; foo(d)(d.T)
+```
+
+</script></section>
+
+
+
+<section data-markdown><script type="text/template">
+# But can we `CanBuildFrom`?
+```
+class Coll[T] { 
+  implicit type BuilderFor[U] <: Builder[U]
+
+  def map[U](f: T => U): BuilderFor[U]#Res
+  // expands to (because the type is implicit):
+  def map[U](f: T => U)(implicit w: BuilderFor[U]): w.Res
+}
+
+class List[T] extends Coll[T] { 
+  implicit type BuilderFor[U] <: ListBuilder[U] = ListBuilder[U]
+  // corresponds to the implicit:
+  implicit def BuilderFor[U]: BuilderFor[U] = valueOf[BuilderFor[U]]
+  // expands to (not expressible by user, BuilderFor is abstract):
+  implicit def BuilderFor[U]: BuilderFor[U] = new ListBuilder[U]
+}
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Trusty Old `Builder`
 ```
 class Builder[El] {
   type Res
   def +=(x: El): this.type
   def result: Res
 }
-
-class Coll[T] { 
-  type BuilderFor[U] <: Builder[U]
-
-  def map[U](f: T => U): BuilderFor[U]#Res
-
-  def map[U](f: T => U)(implicit b: BuilderFor[U]): b.type#Res
-}
-
-
-class List[T] extends Coll[T] { 
-  type BuilderFor[U] <: Builder[U] = ListBuilder[U]
-}
 ```
-
-
 </script></section>
 </section>
 
@@ -262,6 +311,11 @@ class List[T] extends Coll[T] {
 <section>
 <section data-markdown><script type="text/template">
 # Total Matching on Types
+
+  - statically resolved, simple recursion allowed
+  - `MatchError ==> valueOf` fails (implicit type not found)
+  - subtyping and implicit resolution exposed as patterns
+  
 ```
 class Set[T] { 
   type BuilderFor[U] <: SetBuilder[U] = DefaultSetBuilder[U]
@@ -273,7 +327,7 @@ class BitSet {
   type BuilderFor[U] <: SetBuilder[U] = 
     U match { 
       case Int => BitSetBuilder 
-      case T => super.BuilderFor[T]
+      case t   => super.BuilderFor[t]
     }
 }
 ```
@@ -282,8 +336,22 @@ class BitSet {
 </section>
 
 
+<section data-markdown><script type="text/template">
+# Food for Thought
+  - opaque type's `valueOf` dependent on: 
+     - precise type of target (rarely known)
+     - implicit in scope
+  - `match`ing on types
+     - must terminate
+     - nice segue for staging? type macros?
+  - `valueOf[T]` hook for other kinds of reflection?
+</script></section>
 
 
+<section data-markdown><script type="text/template">
+# Questions! Suggestions?
+## Thanks!
+</script></section>
 
 
 
