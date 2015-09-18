@@ -215,25 +215,11 @@ class D { override type T <: Int = 2 }
 </script></section>
 </section>
 
-<section>
-<section data-markdown><script type="text/template">
-# Total Matching on Types
-class Builder[El, Res] { def +=(x: El): this.type ; def result: Res }
-
-class Coll[T] { type BuilderFor[U] <: Builder[U, _] }
-
-class Set[T] { type BuilderFor[U] <: SetBuilder[U] = DefaultSetBuilder[U] }
-class BitSet { type BuilderFor[U] <: SetBuilder[U] = 
-  U match { 
-    case Int => BitSetBuilder 
-    case T => super.BuilderFor[T]
-}
-</script></section>
-</section>
 
 <section>
 <section data-markdown><script type="text/template">
 # Implicit Types
+
 when implicit, behind the scenes, we lower the RHS to a value member, 
 and pass it along when it is inferred, just like implicits
 
@@ -246,9 +232,55 @@ class C { type T <: Int ; implicit val T = 1 ; def foo(implicit x: T) }
 ```
 so that `foo` --> `foo(T)`
 
+```
+class Builder[El] {
+  type Res
+  def +=(x: El): this.type
+  def result: Res
+}
+
+class Coll[T] { 
+  type BuilderFor[U] <: Builder[U]
+
+  def map[U](f: T => U): BuilderFor[U]#Res
+
+  def map[U](f: T => U)(implicit b: BuilderFor[U]): b.type#Res
+}
+
+
+class List[T] extends Coll[T] { 
+  type BuilderFor[U] <: Builder[U] = ListBuilder[U]
+}
+```
+
 
 </script></section>
 </section>
+
+
+
+<section>
+<section data-markdown><script type="text/template">
+# Total Matching on Types
+```
+class Set[T] { 
+  type BuilderFor[U] <: SetBuilder[U] = DefaultSetBuilder[U]
+}
+```
+
+```
+class BitSet { 
+  type BuilderFor[U] <: SetBuilder[U] = 
+    U match { 
+      case Int => BitSetBuilder 
+      case T => super.BuilderFor[T]
+    }
+}
+```
+
+</script></section>
+</section>
+
 
 
 
