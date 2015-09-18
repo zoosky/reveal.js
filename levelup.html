@@ -247,7 +247,7 @@ class C { implicit type T <: Int = 1 }
 class C { type T <: Int = 1; implicit def T: T = valueOf[T] }
 ```
 
-### Statically expanded:
+### The Compiler Knows:
 ```
 class C { type T <: Int = 1; implicit def T: T = 1 }
 ```
