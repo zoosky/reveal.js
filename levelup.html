@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Levelling up Scala</title>
+
+  <meta name="description" content="Some thoughts on where we could take type-level computation in Scala. Presented at Scala World on Sep 21, 2015.">
+  <meta name="author" content="Adriaan Moors">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/typesafe.css" id="theme">
+
+  <!-- Code syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="reveal">
+<div class='footer'><img style="height:1.5em; opacity: 0.66" src="images/typesafe_reverse.svg" title="Typesafe"/><span style="opacity:0.66;text-color:white;position:absolute;top:20%;right:-80%">@adriaanm</span></div>
+<div class="slides">
+
+<section>
+  <h1>Levelling up Scala</h1>
+  <h4 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h4>
+  <h5>Scala Team Lead</h5>
+  <h5 style="opacity: 0.75">adriaanm.github.io/reveal.js/levelup.html</h5>
+</section>
+
+<section>
+   <img src="images/typesafe_color_reverse.svg" title="Typesafe" width="66%"></img>
+</section>
+
+<section data-markdown><script type="text/template">
+# Disclaimer
+
+The information presented here is for **inspirational** purposes only and certainly contains omissions, though *likely no major spelling mistakes*. It is subject to change and may be rendered inaccurate for many reasons, including but not limited to sudden changes of heart and/or mind, as well as **your feedback**, during, before and/or after this talk.
+</script></section>
+
+
+<section>
+<section data-markdown><script type="text/template">
+# Type-Level Prolog Anyone?
+Every Scala compiler contains a poorly specified and inefficiently implemented Prolog engine to resolve your implicit magic.
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Because Prolog with "Facts" wasn't Challenging Enough
+</script></section>
+
+<section data-markdown><script type="text/template">
+## [I Caused Some of its Slowest Paths]
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Computing Types with Implicits is Hard
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Dude!
+## Where Did that Implicit Come From?
+Implicit scope is clearly specified, but all encompassing, and hard to reason about.
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Yo, canine!
+## I heard you <3 Overloads...
+Implicit resolution uses a variant of overloading rules to resolve ambiguities.
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Interaction with Type Inference
+Hint: they interact poorly, though elegantly.
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Throw in Some Variance...
+<quote>"I never think about variance—I just write pluses and minuses until it compiles."  -- me</quote>
+
+[Thanks, Travis](https://twitter.com/travisbrown/status/567901886436675584)
+
+</script></section>
+
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Implicits make OO look Easy!
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Computing with OO
+
+#### Values
+```scala
+trait Abs { def in: Int; def out = in + 1 }
+val two = (new Abs { def in = 1 }).out
+```
+
+#### Types
+```scala
+trait Abs { type in <: Nat; type out = S[in] }
+type II = (Abs { type in = S[Z] })#out
+```
+
+#### (Given)
+```scala
+sealed trait Nat
+final class Z extends Nat ; final class S[T <: Nat] extends Nat
+```
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Make this More Useful?
+</script></section>
+
+<section data-markdown><script type="text/template">
+### Lift Literal Values to Types
+### Opaque Type Members
+### Total Matching on Types
+### Implicit Types
+</script></section>
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Lift Literal Values to Types (SIP-23)
+It's been five months since I had time [to work on this](https://github.com/adriaanm/scala/pull/21), but:
+
+```scala
+scala> val x: 3 = 1 + 2
+x: 3 = 3
+```
+
+</script></section>
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Opaque Type Members
+</script></section>
+
+<section data-markdown><script type="text/template">
+### `val x: Int = 1` versus `type T = Int`
+  - `Int` classifies `x`, which abstracts over `1`.
+  - No explicit classifier for `T`, stands for `Int`.
+  - `final` is implicit for `type` aliases (overriding restricted).
+  - Because they are final, aliases are translucent to type checker.
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Equal footing for `val` and `type`
+  - Type members: classification, computation (restricted)
+  - Value members only compute/abstract
+  - Same computation mechanism at value and type level?
+  - Use equally adequate gear!
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Opaque type members
+```
+class C { type T <: Int = 1 }
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Opaque type members
+
+```
+class C { type T <: Int = 1 ; def foo(x: T) }
+class D { override type T <: Int = 2 }
+```
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Opaque type members
+
+```
+class C { type T <: Int = 1 ; def foo(x: T) }
+class D { override type T <: Int = 2 }
+```
+
+  - `foo` cannot assume `x == 1`, <br>
+     unless `this.getClass eq classOf[C]`
+  - that's ok -- we'll get to the utility
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+## Opaque type members
+
+  - Abstract type members, unless known precisely
+  - How to achieve this precision?
+  - The crux of the design challenge!
+
+</script></section>
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Total Matching on Types
+class Builder[El, Res] { def +=(x: El): this.type ; def result: Res }
+
+class Coll[T] { type BuilderFor[U] <: Builder[U, _] }
+
+class Set[T] { type BuilderFor[U] <: SetBuilder[U] = DefaultSetBuilder[U] }
+class BitSet { type BuilderFor[U] <: SetBuilder[U] = 
+  U match { 
+    case Int => BitSetBuilder 
+    case T => super.BuilderFor[T]
+}
+</script></section>
+</section>
+
+<section>
+<section data-markdown><script type="text/template">
+# Implicit Types
+when implicit, behind the scenes, we lower the RHS to a value member, 
+and pass it along when it is inferred, just like implicits
+
+```
+class C { implicit type T <: Int = 1 ; def foo(implicit x: T) }
+```
+becomes (conceptually! the lowering isn't expressible in general; when no value can be derived, the implicit search fails)
+```
+class C { type T <: Int ; implicit val T = 1 ; def foo(implicit x: T) }
+```
+so that `foo` --> `foo(T)`
+
+
+</script></section>
+</section>
+
+
+
+
+
+
+
+
+</div></div>
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+<script>
+   // Full list of configuration options available at:
+   // https://github.com/hakimel/reveal.js#configuration
+   Reveal.initialize({
+     controls: true,
+     progress: true,
+     slideNumber: true,
+     history: true,
+     center: true,
+     help: true,
+     transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+     // Optional reveal.js plugins
+     dependencies: [
+       { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+       { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+       { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+       { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
+       { src: 'plugin/zoom-js/zoom.js', async: true },
+       { src: 'plugin/notes/notes.js', async: true }
+     ]
+   });
+</script>
+</body>
+</html>
