@@ -52,9 +52,11 @@
 <section data-markdown><script type="text/template">
 # Disclaimer
 
-The information presented here is <br>for **inspirational purposes only**, and <br> certainly contains omissions, <br> though *likely no major spelling gaffes*. 
+The information presented here is for **inspirational purposes only**, and  certainly contains omissions,  though *likely no major spelling gaffes*. It is subject to change and may be rendered inaccurate for many reasons, including but not limited to sudden changes of heart and/or mind, and
 
-It is subject to change and may be rendered inaccurate for many reasons, including but not limited to sudden changes of heart and/or mind, and <br>**your feedback**,<br> during, before and/or after this talk.
+ **your feedback**, 
+ 
+ during, before and/or after this talk.
 </script></section>
 
 
@@ -184,7 +186,7 @@ x: 3 = 3
 
 <section data-markdown><script type="text/template">
 ## Opaque type members
-```
+```scala
 class C { type T <: Int = 1 } // but what does it mean?!?
 ```
 </script></section>
@@ -192,7 +194,7 @@ class C { type T <: Int = 1 } // but what does it mean?!?
 <section data-markdown><script type="text/template">
 ## Opaque type members
 
-```
+```scala
 class C { type T <: Int = 1 ; def foo(x: T) }
 class D { override type T <: Int = 2 }
 ```
@@ -201,14 +203,14 @@ class D { override type T <: Int = 2 }
 <section data-markdown><script type="text/template">
 ## Opaque type members
 
-```
+```scala
 class C { type T <: Int = 1 ; def foo(x: T) }
 class D { override type T <: Int = 2 }
 ```
 
   - `foo` cannot assume `x == 1`, <br>
      unless `this.getClass eq classOf[C]`
-  - that's ok -- we'll get to the utility
+  - let's see what we can do here
 
 </script></section>
 
@@ -216,8 +218,7 @@ class D { override type T <: Int = 2 }
 ## Opaque type members
 
   - Abstract type members, unless known precisely
-  - How to achieve this precision?
-  - The crux of the design challenge!
+  - Crux of the design challenge: precision!
 
 </script></section>
 </section>
@@ -228,6 +229,7 @@ class D { override type T <: Int = 2 }
 # Implicit Types
   - Implicits are great — iff quiet — workers!
   - Pass value witness, identified by type.
+  - (But, let's not identify types from witnesses.)
   - Hmmmmm......
 </script></section>
 
@@ -240,25 +242,27 @@ class D { override type T <: Int = 2 }
 
 <section data-markdown><script type="text/template">
 # Precision via implicits 
-```
+```scala
 class C { implicit type T <: Int = 1 }
 ```
 
 ### Corresponds to:
-```
-class C { type T <: Int = 1; implicit def T: T = valueOf[T] }
+```scala
+class C { type T <: Int = 1
+          implicit def T: T = valueOf[T] }
 ```
 
 ### The Compiler Knows:
-```
-class C { type T <: Int = 1; implicit def T: T = 1 }
+```scala
+class C { type T <: Int = 1
+          implicit def T: T = 1 }
 ```
 
 </script></section>
 
 <section data-markdown><script type="text/template">
 # Precision via implicits 
-```
+```scala
 def foo(x: C)(implicit w: x.T) = println(w)
 
 foo(new C) // prints 1
@@ -266,7 +270,7 @@ foo(new D) // prints 2
 ```
 
 ### Because expansion:
-```
+```scala
 val c = new C ; foo(c)(c.T)
 val d = new D ; foo(d)(d.T)
 ```
@@ -282,28 +286,37 @@ To accept `foo(new C)(1)`,  we'd need to track that no subsumption was used to t
 
 <section data-markdown><script type="text/template">
 # But can we `CanBuildFrom`?
-```
+```scala
 class Coll[T] { 
   implicit type BuilderFor[U] <: Builder[U]
 
   def map[U](f: T => U): BuilderFor[U]#Res
   // expands to (because the type is implicit):
-  def map[U](f: T => U)(implicit w: BuilderFor[U]): w.Res
+  def map[U](f: T => U)
+            (implicit w: BuilderFor[U]): w.Res
 }
+```
+</script></section>
 
+<section data-markdown><script type="text/template">
+# But can we `CanBuildFrom`?
+```scala
 class List[T] extends Coll[T] { 
-  implicit type BuilderFor[U] <: ListBuilder[U] = ListBuilder[U]
+  implicit type BuilderFor[U] <: ListBuilder[U] = 
+    ListBuilder[U]
   // corresponds to the implicit:
-  implicit def BuilderFor[U]: BuilderFor[U] = valueOf[BuilderFor[U]]
+  implicit def BuilderFor[U]: BuilderFor[U] = 
+    valueOf[BuilderFor[U]]
   // expands to (not expressible by user, BuilderFor is abstract):
-  implicit def BuilderFor[U]: BuilderFor[U] = new ListBuilder[U]
+  implicit def BuilderFor[U]: BuilderFor[U] = 
+    new ListBuilder[U]
 }
 ```
 </script></section>
 
 <section data-markdown><script type="text/template">
 # Trusty Old `Builder`
-```
+```scala
 class Builder[El] {
   type Res
   def +=(x: El): this.type
@@ -320,8 +333,8 @@ class Builder[El] {
 # Matching on Types
   - Ideally evaluated during type checking
   - Bounded recursion allowed
-  - `valueOf` fails on `MatchError` (implicit type not found)
   - Subtyping and implicit resolution exposed as patterns
+  - `MatchError` fails `valueOf` (yields error message)
   - Things get fuzzier here...
 
 </script></section>
@@ -329,13 +342,14 @@ class Builder[El] {
 <section data-markdown><script type="text/template">
 # Queue `BitSet`!
   
-```
+```scala
 class Set[T] { 
-  type BuilderFor[U] <: SetBuilder[U] = DefaultSetBuilder[U]
+  type BuilderFor[U] <: SetBuilder[U] = 
+    DefaultSetBuilder[U]
 }
 ```
 
-```
+```scala
 class BitSet extends Set[Int] { 
   type BuilderFor[U] <: SetBuilder[U] = 
     U match { 
@@ -348,15 +362,10 @@ class BitSet extends Set[Int] {
 </script></section>
 
 <section data-markdown><script type="text/template">
-##  What is 
-## `valueOf[T match { .... }]`?
-</script></section>
+# Everything `CBF` can do
 
-<section data-markdown><script type="text/template">
-# Everything `CanBF` can do...
-
-```
-// def map[U](f: T => U)(implicit w: BuilderFor[U]): w.Res
+```scala
+// def map[U](f: T => U)(implicit w: BF[U]): w.Res
 bs.map(_ => 1)(implicitly[bs.BuilderFor[Int]])
 // for an implicit type, first try valueOf
 bs.map(_ => 1)(valueOf[bs.BuilderFor[Int]])
@@ -366,10 +375,15 @@ bs.map(_ => 1)(BitSetBuilder) // expected...
 </script></section>
 
 <section data-markdown><script type="text/template">
+##  What is 
+## `valueOf[T match { .... }]`?
+</script></section>
+
+<section data-markdown><script type="text/template">
 # Choices, choices
-  - Require `final` for choosing `BitSet`'s `BuilderFor`.
-  - Delay until run time if precise type not known.
-  - Do what implicits do: what could possibly go wrong?
+  - Require `final` for choosing `BitSet`'s `BuilderFor`?
+  - Do what implicits do (ignore subclasses)?
+  - Delay until run time if precise type not known?
 </script></section>
 
 </section>
