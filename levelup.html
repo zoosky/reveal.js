@@ -39,7 +39,7 @@
 <div class="slides">
 
 <section>
-  <h1>Levelling up Scala</h1>
+  <h1>Levelling UP Scala</h1>
   <h4 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h4>
   <h5>Scala Team Lead</h5>
   <h5 style="opacity: 0.75">adriaanm.github.io/reveal.js/levelup.html</h5>
@@ -196,7 +196,7 @@ class C { type T <: Int = 1 } // but what does it mean?!?
 
 ```scala
 class C { type T <: Int = 1 ; def foo(x: T) }
-class D { override type T <: Int = 2 }
+class D extends C { override type T <: Int = 2 }
 ```
 </script></section>
 
