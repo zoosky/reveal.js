@@ -114,15 +114,18 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 </script></section> <section data-markdown><script type="text/template">
 
 ## New Backend & Optimizer!
+### By @lrytz <small>(started by Miguel Garcia)</small>
 
 * GenBCode ASM-based backend
 * Inline from classes/objects/traits ([scala/scala#4711](https://github.com/scala/scala/issues/4711))
 * Eliminate: closures ([scala/scala-dev#14](https://github.com/scala/scala-dev/issues/14)), box/unbox ([scala/scala#4858](https://github.com/scala/scala/issues/4858)),...
 * Inliner scope configurable: project, classpath
+* See ["The new Optimizer in Scala 2.12"](https://dl.dropboxusercontent.com/u/4881107/website/scala-user-group-2016.pdf) at Zurich-Scala
 
 </script></section> <section data-markdown><script type="text/template">
 
 ## Incremental build improvements!
+### By @gkossakowski
   - Class-based name hashing ([sbt/sbt#1104](https://github.com/sbt/sbt/issues/1104))
   - More efficient IO for analysis ([sbt/sbt#2525](https://github.com/sbt/sbt/issues/2525))
 
@@ -190,9 +193,8 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 
 </script></section> <section data-markdown><script type="text/template">
 
-# Macros: `scala.meta`
-  - Prototype, default in Don Giovanni
-  - Complete rewrite!
+# Macros: `scala.meta`?
+  - Not sure yet what dotty will bring.
   - Only use macros when all else fails...
 
 </script></section> <section data-markdown><script type="text/template">
@@ -204,7 +206,7 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 ## Rework back-end (see [dotty](https://github.com/lampepfl/dotty))
   - keep front-end for source compatibility
   - faster compiler
-  - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M)
+  - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M) with TASTY?
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -264,11 +266,10 @@ Sorry, Andrew & Nermin!
 
 # Single Abstract Method
 #### 2.11.5 (`-Xexperimental`)
-  - Scala λ assignable-to Java 8 λ
+  - Scala λ assignable to Java 8 λ
   - Call Java 8 API from Scala
   - Also uses INDY since M4 ([scala/scala#4971](https://github.com/scala/scala/issues/4971))
-  - TODO
-    - Better type inference with Java wildcards...
+  - TODO: type inference & Java wildcards...
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -432,30 +433,49 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter {
 
 ## My idea of P
 ### Express, Understand & Maintain
-  - immutable first (val <> var, expr <> stmt, recursion)
-  - pattern matching (analysis of input determines output)
-  - local methods (divide & conquer)
-  - (de)compose safely, guided by types
-  - type inference (best types are unseen -- e.g., definition-site variance)
+  - divide & conquer
+  - purity for understanding, not godliness
+  - (de/re)compose safely, guided by types
 
 </script></section> <section data-markdown><script type="text/template">
 
+## Abstractions: just right
+  - decouple: functions / objects
+  - couple: uniform nesting (e.g., local methods)
+  - don't overdo it
+
+</script></section> <section data-markdown><script type="text/template">
 
 ## `val` is your friend
+  - immutable first, `var` within reach
 
 </script></section> <section data-markdown><script type="text/template">
 
 ##   Everything is an expression
+  - functions abstract over expressions
+  - statements == expressions `: Unit`
+  - `-->` function types uniform
 
 </script></section> <section data-markdown><script type="text/template">
 
 ##  Patterns for destruction
+  - analysis of input determines output
+  - cover your cases
+  - often, domain doesn't change that quickly
+  - when it does, subtypes within reach
 
 </script></section> <section data-markdown><script type="text/template">
 
+## Type ascription 2nd
+### because optional
+  - type inference >> codegen
+  - types are documentation
+  - best types are unseen (e.g., definition-site variance
+
+</script></section> <section data-markdown><script type="text/template">
 
 ##  How I stopped worrying about variance
-### "Just add +/- until it compiles."
+### "Just add +/- until it compiles." --me
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -471,20 +491,6 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter {
 ```scala
 def map[R](mapper: T => R): Stream[R]
 ```
-
-
-</script></section> <section data-markdown><script type="text/template">
-
-
-
-
-
-## Variance
-
-|     definition      |   ensuring fun subtyping |
-|---------------------|--------------------------|
-| `trait =>[-T, +R]`  | `=>[Arg, Res]`           |
-| `trait F[T, R]`   <!-- .element: class="fragment" data-fragment-index="1" -->  | `F[_ >: Arg, _ <: Res]`  <!-- .element: class="fragment" data-fragment-index="1" -->  |
 
 
 </script></section> <section data-markdown><script type="text/template">
