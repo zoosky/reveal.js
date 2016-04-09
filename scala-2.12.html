@@ -403,6 +403,16 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter {
 }
 ```
 
+</script></section> <section data-markdown><script type="text/template">
+
+## SAM gotchas TODO
+ - LMF v static expansion
+ - overloading
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Trait encoding TODO
+  - needs magic for fields, super calls, initialization, extending class, forwarders
 
 
 
@@ -431,12 +441,24 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter {
 </script></section> <section data-markdown><script type="text/template">
 
 
-<!--
-  `val` is your friend
-  Everything is an expression
-  Patterns for destruction
-  How I stopped worrying about variance
--->
+## `val` is your friend
+
+</script></section> <section data-markdown><script type="text/template">
+
+##   Everything is an expression
+
+</script></section> <section data-markdown><script type="text/template">
+
+##  Patterns for destruction
+
+</script></section> <section data-markdown><script type="text/template">
+
+
+##  How I stopped worrying about variance
+### "Just add +/- until it compiles."
+
+</script></section> <section data-markdown><script type="text/template">
+
 
 ## Function subtyping
 
@@ -453,14 +475,7 @@ def map[R](mapper: T => R): Stream[R]
 
 </script></section> <section data-markdown><script type="text/template">
 
-<!-- <section data-markdown><script type="text/template">
-## Function subtyping
-"Produce a new `Stream` with elements `: R`, for any `R` -- my elements being of type `T`, provided..."
 
-#### Java:
-#### Scala: a function from `T` to `R`
-
-</script></section> -->
 
 
 
@@ -497,51 +512,43 @@ def map[R](mapper: T => R): Stream[R]
 
 `BetterArg >: Arg` `/\` `BetterRes <: Res`
 
-</script></section>
+</script></section> </section>
 
 
+
+<section>
+   <H3>Thanks!</H3>
+   <H2>Questions!</H2>
+   <h4><a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a></h4>
 </section>
 
+</div></div>
 
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
 
+<script>
+  // Full list of configuration options available at:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    slideNumber: true,
+    history: true,
+    center: true,
+    help: true,
+    transition: 'fade', // none/fade/slide/convex/concave/zoom
 
-
-
-      <section>
-         <H3>Thanks!</H3>
-         <H2>Questions!</H2>
-         <h4><a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a></h4>
-      </section>
-
-    </div>
-
-  </div>
-
-  <script src="lib/js/head.min.js"></script>
-  <script src="js/reveal.js"></script>
-
-  <script>
-    // Full list of configuration options available at:
-    // https://github.com/hakimel/reveal.js#configuration
-    Reveal.initialize({
-      controls: true,
-      progress: true,
-      slideNumber: true,
-      history: true,
-      center: true,
-      help: true,
-      transition: 'fade', // none/fade/slide/convex/concave/zoom
-
-      // Optional reveal.js plugins
-      dependencies: [
-        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
-        { src: 'plugin/zoom-js/zoom.js', async: true },
-        { src: 'plugin/notes/notes.js', async: true }
-      ]
-    });
-  </script>
+    // Optional reveal.js plugins
+    dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+    ]
+  });
+</script>
 </body>
 </html>
