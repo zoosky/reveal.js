@@ -46,7 +46,6 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 </head>
 
 <body>
-
   <div class="reveal">
     <div class='footer'> 
       <img style="height:1.5em; opacity: 0.66" src="images/lightbend-color-reverse.svg" title="Lightbend"> </img>
@@ -56,9 +55,9 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
     <div class="slides">
       <section>
         <h2>Scala 2.12 & Java 8</h2>
-        <h3>More Fun Together!</h3>
+        <h3 class="orange">More Fun Together!</h3>
         <h4 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h4>
-        <h5>Scala Team Lead</h5>
+        <h5 class="orange">Scala Team Lead</h5>
         <h5 style="opacity: 0.75">adriaanm.github.io/reveal.js/scala-2.12.html</h5>
       </section>
 
@@ -68,132 +67,215 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 
 
 
+<!- --------------------- roadmap etc --------------------------------------------------- -->
+<section> <section data-markdown><script type="text/template">
 
-<section>
+# Who are you?
 
-<section data-markdown><script type="text/template">
-# Community!
-- More new contributors each release!
-- Investments:
-  - Simplify process, standard sbt build
-  - Infrastructure (scala/scala-jenkins-infra)
-    - contribute from browser!
+</script></section> <section data-markdown><script type="text/template">
+
+## Team
+##### @szeiger
+##### @sethtisue
+##### @lrytz
+##### @adriaanm
+##### @retronym
+
+</script></section> <section data-markdown><script type="text/template">
+
+# What have you been up to lately?
+
+</script></section> <section data-markdown><script type="text/template">
+
+## 1 release / 6 weeks
+  - Q1 2015: 2.11.5, 2.11.6, 2.10.5
+  - Q2 2015: 2.12.0-M1, 2.11.7
+  - Q3 2015: 2.12.0-M2, 2.10.6
+  - Q4 2015: 2.12.0-M3
+  - Q1 2016: 2.11.8, 2.12.0-M4
+
+</script></section> <section data-markdown><script type="text/template">
+
+# What's next?
+## Same
+  - Q2 2016: 2.12.0-M5, 2.12.0-RC1
+  - Q3 2016: 2.12.0, 2.12.1, 2.11.9
+  - Q4 2016: 2.12.2, 2.12.3
+
+</script></section> <section data-markdown><script type="text/template">
+
+
+# What are you most excited about?
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Compiling to JVM 8!
+
+</script></section> <section data-markdown><script type="text/template">
+
+## New Backend & Optimizer!
+
+* GenBCode ASM-based backend
+* Inline from classes/objects/traits ([scala/scala#4711](https://github.com/scala/scala/issues/4711))
+* Eliminate: closures ([scala/scala-dev#14](https://github.com/scala/scala-dev/issues/14)), box/unbox ([scala/scala#4858](https://github.com/scala/scala/issues/4858)),...
+* Inliner scope configurable: project, classpath
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Incremental build improvements!
+  - Class-based name hashing ([sbt/sbt#1104](https://github.com/sbt/sbt/issues/1104))
+  - More efficient IO for analysis ([sbt/sbt#2525](https://github.com/sbt/sbt/issues/2525))
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Community!
+
+</script></section> <section data-markdown><script type="text/template">
+
+### friendly & inclusive
+
+</script></section> <section data-markdown><script type="text/template">
+
+### co-passionate & compassionate
+
+</script></section> <section data-markdown><script type="text/template">
+
+### GROWING
+
+</script></section> <section data-markdown><script type="text/template">
+
+# Thank You!
+
+</script></section> <section data-markdown><script type="text/template">
+
+### Investing in opening up
+  - Scala Center!
+  - Standard sbt build (WIP)
+  - PR validation on EC2 ([scala/scala-jenkins-infra](https://github.com/scala/scala-jenkins-infra))
   - Modularization (more to come in 2.13)
     - community owned (merge PRs, push tag to release)
-</script></section>
+    - smaller core to standardize & stabilize
 
-<section data-markdown><script type="text/template">
-`git shortlog -sn --no-merges 2.12.x --not 2.11.x`:
-  - 153	Lukas Rytz
-  -  66	Jason Zaugg
-  -  31	Adriaan Moors
-  -  28	A. P. Marki
-  -  16	Felix Mulder
-  -  15	Simon Ochsenreither
-  -  15	Seth Tisue
-  -  15	Stefan Zeiger
-  -  13	Rex Kerr
-  -   6	Kato Kazuyoshi
-  - **52 more**: Rui Gonçalves, Max Bileschi, Janek Bogucki, qilab gamma, Shane Delmore, jxcoder, François Garillot, Kenji Yoshida, triggerNZ, Dominik Gruntz, Alexey Romanov, Simon Schäfer, Evgeny Vereshchagin, Todd Vierling, Viktor Klang, Marc Siegel, Masato Sogame, rubyu, Vojin Jovanovic, cchantep, dgruntz, harryhuk, martijnhoekstra, peterz, Marko Elezovic, Aleksandar Prokopec, Antoine Gourlay, Arnout Engelen, Brian McKenna, Casey Leask, Denis Rosset, Denton Cockburn, Denys Shabalin, Dmitry Melnichenko, Erlend Hamnaberg, Eugene Dzhurinsky, JoeRatt, Linas Medziunas, Lukas Elmer, Maks Atygaev, Malte Isberner, Marc Prud'hommeaux, Mark Mynsted, Michał Pociecha, Nicolas Stucki, Paolo Giarrusso, Rebecca Claire Murphy, Roman Hargrave, Shadaj, Shadow53, Steven Scott, Valerian, </script></section>
+</script></section> <section data-markdown><script type="text/template">
 
-<section data-markdown><script type="text/template">
-# Thank you!
-</script></section>
-
-</section>
-
-
-<section>
-<section data-markdown><script type="text/template">
-# Scala Roadmap 
-## Overview
-</script></section>
-<section data-markdown><script type="text/template">
 # 2.12
 ## Compiler release
  - Java 8 <small>(λ, SAM, `default`)</small>
  - New Optimizer <small>(based on Miguel Garcia's work)</small>
- - Abide <small>(time permitting)</small>
+ - <small>~~Abide (time permitting)~~</small>
  - Set scene for library cleanups
- - Q1 2016
-</script></section>
-<section data-markdown><script type="text/template">
-# Aida
+ - ~~Q1~~ *Q2* 2016
+
+</script></section> <section data-markdown><script type="text/template">
+
+# 2.13 (Aida)
 ## Library release
- - Cleanup, simplify & shrink stdlib
- - Invite community modules
- - `scala.meta` &nbsp;&nbsp;  *//&nbsp;&nbsp;TODO: rewrite all the macros!*
- - (&#177;12 months after 2.12.3; 18 month cycle)
-</script></section>
-<section data-markdown><script type="text/template">
+## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
+## 2.12.1 + 18 months
+
+</script></section> <section data-markdown><script type="text/template">
+
+# Simpler Core Library
+  - Composition over inheritance
+  - Move out parallel collections & views
+  - Caveat Inheritor Collectionis
+    - 99% of users need not worry, though
+
+</script></section> <section data-markdown><script type="text/template">
+
+# Modules
+  - Lazy collections (interop with Java 8 Streams)
+  - Parallel collections (multiple impls? scala-blitz & Java 8)
+  - Validation
+
+</script></section> <section data-markdown><script type="text/template">
+
+# Macros: `scala.meta`
+  - Prototype, default in Don Giovanni
+  - Complete rewrite!
+  - Only use macros when all else fails...
+
+</script></section> <section data-markdown><script type="text/template">
+
 # Don Giovanni, act 1
+
+</script></section> <section data-markdown><script type="text/template">
+
 ## Rework back-end (see [dotty](https://github.com/lampepfl/dotty))
-  - (keep front-end)
-  - faster (phase fusion)
+  - keep front-end for source compatibility
+  - faster compiler
   - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M)
-</script></section>
-<section data-markdown><script type="text/template">
+
+</script></section> <section data-markdown><script type="text/template">
+
 # Don Giovanni, act 2
-## Rework front-end (see [dotty](https://github.com/lampepfl/dotty))
-  - remove deprecated syntax
-  - simpler foundations
-  - fewer [puzzlers](http://www.amazon.com/Scala-Puzzlers-Andrew-Phillips/dp/0981531679) (sorry, Andrew & Nermin)
-</script></section>
-</section>
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Simpler syntax
+ - Drop procedure syntax
+   - all definitions: `kw name sig [= body]`
+ - So long, XML literals!
+   - `xml""<hello/>"""`
+ - Anyone ever use early definitions?
+   - introducing: trait parameters
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Simpler semantics
+ - Type members model type constructors, existentials,...
+ - No more lub blow-ups (union types as lazy lubs)
+ - Built-in support for some of shapeless (`HList/HMap`)
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Fewer [puzzlers](http://www.amazon.com/Scala-Puzzlers-Andrew-Phillips/dp/0981531679)
+Sorry, Andrew & Nermin!
 
 
-<section>
-<section data-markdown><script type="text/template">
+</script></section> </section>
+<!- --------------------- MAIN MEAT ----------------------------------------------- -->
+<section> <section data-markdown><script type="text/template">
+
+
 # 2.12 <3 Java 8
 ## [scala-lang.org/news/2.12-roadmap](http://scala-lang.org/news/2.12-roadmap)
-</script></section>
 
-<section data-markdown><script type="text/template">
-# Timeline
-  - [Q1 2016:](https://github.com/scala/scala/milestones) 2.12.0 & last *public* 2.11.x
-    - ... after Java 7 [public EOL](http://www.oracle.com/technetwork/java/eol-135779.html)
-  - 2.11 & 2.12 closely aligned
-    - modulo Java 6
-</script></section>
+</script></section> <section data-markdown><script type="text/template">
 
+# `default` methods
+#### 2.12.0-M[3, 4]
+  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
+  - Define Java 8 API in Scala
+  - Compile `trait` to `interface`
+    - Binary compat ftw
 
-<section data-markdown><script type="text/template">
+</script></section> <section data-markdown><script type="text/template">
+
 # INDY-λ
 #### 2.11.7, 2.12.0-M2
  1. scalac λ bytecode mimics javac's
  1. ride JIT perf tuning wave
  1. profit
-</script></section>
 
-<section data-markdown><script type="text/template">
-# `default` methods
-#### 2.12.0-M3
-  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
-  - Define Java 8 API in Scala
-  - Compile `trait` to `interface`
-    - Binary compat ftw
-    - Probably opt-in
-</script></section>
+</script></section> <section data-markdown><script type="text/template">
 
-<section data-markdown><script type="text/template">
 # Single Abstract Method
 #### 2.11.5 (`-Xexperimental`)
   - Scala λ assignable-to Java 8 λ
   - Call Java 8 API from Scala
+  - Also uses INDY since M4
   - TODO
     - Better type inference with Java wildcards...
-    - Spec
-    - Also use INDY?
-</script></section>
 
-<section data-markdown><script type="text/template">
-## `java.util.stream.Stream`
+</script></section> <section data-markdown><script type="text/template">
+
 ```scala
 /* https://gist.github.com/adriaanm/892d6063dd485d7dd221
 Original Java 8 version: 
 http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
 
-$ scala -Xexperimental                                            */
+$ scala                                                          */
 scala> import java.util.stream.{Stream, IntStream}
 scala> import java.util.{Arrays, List}
 
@@ -295,10 +377,10 @@ map: a2
 forEach: A2
 ```
 
-</script></section>
+
+</script></section> <section data-markdown><script type="text/template">
 
 
-<section data-markdown><script type="text/template">
 ## SAM Synthesis
 ```scala
 scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { s => 
@@ -313,40 +395,41 @@ scala> Stream of ("d2", "a2", "b1", "b3", "c") filter {
   }
 ```
 
-</script></section>  
 
-<!-- <section data-markdown><script type="text/template">
-## Wily Wildcards
-```scala
-// wildcard capture is tricky, whence the `map[String]` above
-scala> Stream.of("a1", "a2", "a3").map(_ substring 1)
-res: java.util.stream.Stream[_ >: String] = ReferencePipeline$3@4ef37659
-```
-</script></section> -->
 
-</section>
 
-<section>
-<section data-markdown><script type="text/template">
-# FP >> λs
-## (A brief rant)
-</script></section>
+</script></section>  </section>
+<!- --------------------- WHAT'S IN FP ----------------------------------------------- -->
+<section> <section data-markdown><script type="text/template">
 
-<section data-markdown><script type="text/template">
-### Define, compose and understand small units of abstraction over known set of types
-#### (OO's complement)
-</script></section>
 
-<section data-markdown><script type="text/template">
-## Express, Understand & Refactor
+# My Idea of FP
+
+</script></section> <section data-markdown><script type="text/template">
+
+## OO's complement
+#### *Small* units of functionality over *known* set of types
+
+</script></section> <section data-markdown><script type="text/template">
+
+## My idea of P
+### Express, Understand & Maintain
   - immutable first (val <> var, expr <> stmt, recursion)
   - pattern matching (analysis of input determines output)
   - local methods (divide & conquer)
   - (de)compose safely, guided by types
   - type inference (best types are unseen -- e.g., definition-site variance)
-</script></section>
 
-<section data-markdown><script type="text/template">
+</script></section> <section data-markdown><script type="text/template">
+
+
+<!--
+  `val` is your friend
+  Everything is an expression
+  Patterns for destruction
+  How I stopped worrying about variance
+-->
+
 ## Function subtyping
 
 #### Java: `Function`'s users must encode expected subtyping
@@ -360,7 +443,7 @@ def map[R](mapper: T => R): Stream[R]
 ```
 
 
-</script></section>
+</script></section> <section data-markdown><script type="text/template">
 
 <!-- <section data-markdown><script type="text/template">
 ## Function subtyping
@@ -372,7 +455,7 @@ def map[R](mapper: T => R): Stream[R]
 </script></section> -->
 
 
-<section data-markdown><script type="text/template">
+
 ## Variance
 
 |     definition      |   ensuring fun subtyping |
@@ -381,10 +464,9 @@ def map[R](mapper: T => R): Stream[R]
 | `trait F[T, R]`   <!-- .element: class="fragment" data-fragment-index="1" -->  | `F[_ >: Arg, _ <: Res]`  <!-- .element: class="fragment" data-fragment-index="1" -->  |
 
 
-</script></section>
+</script></section> <section data-markdown><script type="text/template">
 
 
-<section data-markdown><script type="text/template">
 ## Natural subtyping for functions
 
 `BetterArg => BetterRes <: Arg => Res`
@@ -393,10 +475,10 @@ def map[R](mapper: T => R): Stream[R]
 
 `BetterArg >: Arg ` `/\` `BetterRes <: Res`
 
-</script></section>
+
+</script></section> <section data-markdown><script type="text/template">
 
 
-<section data-markdown><script type="text/template">
 ## Wildcard subtyping for functions
 
 `F[_ >: BetterArg, _ <: BetterRes]`
@@ -413,79 +495,6 @@ def map[R](mapper: T => R): Stream[R]
 </section>
 
 
-
-<section>
-<section data-markdown><script type="text/template">
-# Aida
-## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
-</script></section>
-
-<section data-markdown><script type="text/template">
-# Simpler Core Library
-  - Composition over inheritance
-  - Move out parallel collections & views
-  - Caveat Inheritor Collectionis
-    - 99% of users need not worry, though
-</script></section>
-
-
-<section data-markdown><script type="text/template">
-# Modules
-  - Lazy collections (interop with Java 8 Streams)
-  - Parallel collections (multiple impls: scala-blitz & Java 8)
-  - Validation
-</script></section>
-
-
-<section data-markdown><script type="text/template">
-# Macros: `scala.meta`
-  - Prototype, default in Don Giovanni
-  - Complete rewrite!
-  - Only use macros when all else fails...
-</script></section>
-</section>
-
-
-
-
-<section>
-<section data-markdown><script type="text/template">
-# Don Giovanni
-## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
-</script></section>
-
-<section data-markdown><script type="text/template">
-# Refactor compiler
- - Inspired by [dotty](https://github.com/lampepfl/dotty) incubator
- - Focus on ease of migration, bang for buck
-</script></section>
-
-<section data-markdown><script type="text/template">
-# Simpler syntax
- - Drop procedure syntax
-   - all definitions: `kw name sig [= body]`
- - So long, XML literals!
-   - `xml""<hello/>"""`
- - Anyone ever use early definitions?
-   - introducing: trait parameters
-</script></section>
-
-<section data-markdown><script type="text/template">
-# Simpler semantics
- - Type members model type constructors, existentials,...
- - No more lub blow-ups (union types as lazy lubs)
- - Built-in support for some of shapeless (`HList/HMap`)
-</script></section>
-
-<section data-markdown><script type="text/template">
-# Binary Compatibility
- - Serialize Typed ASTs
- - Recompile dependencies
- - Source & binary compatibility coincide
- - See [Martin's talk](https://www.youtube.com/watch?v=g1Pqyskjx8M)
-</script></section>
-
-</section>
 
 
 
@@ -528,133 +537,3 @@ def map[R](mapper: T => R): Stream[R]
   </script>
 </body>
 </html>
-
-
-
-
-<!--
-
-      
-      <section>
-        <section>
-          <h2>Vertical Slides</h2>
-          <p>Slides can be nested inside of each other.</p>
-          <p>Use the <em>Space</em> key to navigate through all slides.</p>
-          <br>
-          <a href="#" class="navigate-down">
-            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-          </a>
-        </section>
-        <section>
-          <h2>Basement Level 1</h2>
-          <p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.</p>
-        </section>
-        <section>
-          <h2>Basement Level 2</h2>
-          <p>That's it, time to go back up.</p>
-          <br>
-          <a href="#/2">
-            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg);">
-          </a>
-        </section>
-      </section>
-
-
-      <section>
-        <section id="fragments">
-          <h2>Fragments</h2>
-          <p>Hit the next arrow...</p>
-          <p class="fragment">... to step through ...</p>
-          <p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-          <aside class="notes">
-            This slide has fragments which are also stepped through in the notes window.
-          </aside>
-        </section>
-        <section>
-          <h2>Fragment Styles</h2>
-          <p>There's different types of fragments, like:</p>
-          <p class="fragment grow">grow</p>
-          <p class="fragment shrink">shrink</p>
-          <p class="fragment roll-in">roll-in</p>
-          <p class="fragment fade-out">fade-out</p>
-          <p class="fragment current-visible">current-visible</p>
-          <p class="fragment highlight-red">highlight-red</p>
-          <p class="fragment highlight-blue">highlight-blue</p>
-        </section>
-      </section>
-
-      <section id="transitions">
-        <h2>Transition Styles</h2>
-        <p>
-          You can select from different transitions, like: <br>
-          <a href="?transition=none#/transitions">None</a> -
-          <a href="?transition=fade#/transitions">Fade</a> -
-          <a href="?transition=slide#/transitions">Slide</a> -
-          <a href="?transition=convex#/transitions">Convex</a> -
-          <a href="?transition=concave#/transitions">Concave</a> -
-          <a href="?transition=zoom#/transitions">Zoom</a>
-        </p>
-      </section>
-
-      <section>
-        <section data-background="#dddddd">
-          <h2>Slide Backgrounds</h2>
-          <p>
-            Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
-          </p>
-          <a href="#" class="navigate-down">
-            <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-          </a>
-        </section>
-        <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
-          <h2>Image Backgrounds</h2>
-          <pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-        </section>
-        <section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
-          <h2>Tiled Backgrounds</h2>
-          <pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-        </section>
-        <section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
-          <div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
-            <h2>Video Backgrounds</h2>
-            <pre><code style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
-          </div>
-        </section>
-      </section>
-
-      <section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
-        <h2>Background Transitions</h2>
-        <p>
-          Different background transitions are available via the backgroundTransition option. This one's called "zoom".
-        </p>
-        <pre><code>Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
-      </section>
-
-      <section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
-        <h2>Background Transitions</h2>
-        <p>
-          You can override background transitions per-slide.
-        </p>
-        <pre><code style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
-      </section>
-
-      <section>
-        <h2>Intergalactic Interconnections</h2>
-        <p>
-          You can link between slides internally,
-          <a href="#/2/3">like this</a>.
-        </p>
-      </section>
-
-      <section>
-        <h2>Speaker View</h2>
-        <p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
-        <p>Press the <em>S</em> key to try it out.</p>
-
-        <aside class="notes">
-          Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-        </aside>
-      </section>
-
--->
