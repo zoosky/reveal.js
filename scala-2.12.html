@@ -245,10 +245,12 @@ Sorry, Andrew & Nermin!
 
 # `default` methods
 #### 2.12.0-M[3, 4]
-  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
-  - Define Java 8 API in Scala
   - Compile `trait` to `interface`
     - Binary compat ftw
+    - So long, implementation classes!
+  - Define Java 8 API in Scala
+    - Still with care...
+  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -264,18 +266,21 @@ Sorry, Andrew & Nermin!
 #### 2.11.5 (`-Xexperimental`)
   - Scala λ assignable-to Java 8 λ
   - Call Java 8 API from Scala
-  - Also uses INDY since M4
+  - Also uses INDY since M4 ([scala/scala#4971](https://github.com/scala/scala/issues/4971))
   - TODO
     - Better type inference with Java wildcards...
 
 </script></section> <section data-markdown><script type="text/template">
 
 ```scala
-/* https://gist.github.com/adriaanm/892d6063dd485d7dd221
-Original Java 8 version: 
+/* Original:
 http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
+https://gist.github.com/adriaanm/892d6063dd485d7dd221
 
-$ scala                                                          */
+$ scala
+Welcome to Scala 2.12.0-M4 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_74).
+Type in expressions for evaluation. Or try :help.                */
+
 scala> import java.util.stream.{Stream, IntStream}
 scala> import java.util.{Arrays, List}
 
@@ -284,90 +289,89 @@ scala> val myList = Arrays.asList("a1", "a2", "b1", "c2", "c1")
 myList: java.util.List[String] = [a1, a2, b1, c2, c1]
 
 /*
-myList
-    .stream()
-    .filter(s -> s.startsWith("c"))
-    .map(String::toUpperCase)
-    .sorted()
-    .forEach(System.out::println);
-*/
+ myList
+     .stream()
+     .filter(s -> s.startsWith("c"))
+     .map(String::toUpperCase)
+     .sorted()
+     .forEach(System.out::println);
+ */
 scala> myList.stream.
-         filter(_.startsWith("c")).
-         map(_.toUpperCase).
-         sorted.
-         forEach(println)
+          filter(_.startsWith("c")).
+          map(_.toUpperCase).
+          sorted.
+          forEach(println)
 C1
 C2
 
 /*
-Arrays.stream(new int[] {1, 2, 3})
-    .map(n -> 2 * n + 1)
-    .average()
-    .ifPresent(System.out::println);  // 5.0
-*/
+ Arrays.stream(new int[] {1, 2, 3})
+     .map(n -> 2 * n + 1)
+     .average()
+     .ifPresent(System.out::println);  // 5.0
+ */
 scala> Arrays.stream(Array(1, 2, 3)).
-         map(n => 2 * n + 1).average.ifPresent(println)
+          map(n => 2 * n + 1).average.ifPresent(println)
 5.0
 
-
 /*
-Stream.of("a1", "a2", "a3")
-    .map(s -> s.substring(1))
-    .mapToInt(Integer::parseInt)
-    .max()
-    .ifPresent(System.out::println);  // 3
-*/
+ Stream.of("a1", "a2", "a3")
+     .map(s -> s.substring(1))
+     .mapToInt(Integer::parseInt)
+     .max()
+     .ifPresent(System.out::println);  // 3
+ */
 scala> Stream.of("a1", "a2", "a3").
-          map[String](_ substring 1).
-          mapToInt(Integer.parseInt).
-          max.
-          ifPresent(println)
+           map[String](_ substring 1).
+           mapToInt(Integer.parseInt).
+           max.
+           ifPresent(println)
 3
 
 // wildcard capture is tricky, whence the `map[String]` above
 scala> Stream.of("a1", "a2", "a3").map(_ substring 1)
-res: java.util.stream.Stream[?0] = ReferencePipeline$3@4ef37659
+res6: java.util.stream.Stream[?0] = java.util.stream.ReferencePipeline$3@435871cb
 
 /*
-Stream.of(1.0, 2.0, 3.0)
-    .mapToInt(Double::intValue)
-    .mapToObj(i -> "a" + i)
-    .forEach(System.out::println);
-*/
+ Stream.of(1.0, 2.0, 3.0)
+     .mapToInt(Double::intValue)
+     .mapToObj(i -> "a" + i)
+     .forEach(System.out::println);
+ */
 scala> Stream.of(1.0, 2.0, 3.0).mapToInt(_.intValue).
-         mapToObj(i => "a" + i).forEach(println)
+          mapToObj(i => "a" + i).forEach(println)
 a1
 a2
 a3
 
 /*
-Stream.of("d2", "a2", "b1", "b3", "c")
-    .filter(s -> {
-        System.out.println("filter: " + s);
-        return s.startsWith("a");
-    })
-    .sorted((s1, s2) -> {
-        System.out.printf("sort: %s; %s\n", s1, s2);
-        return s1.compareTo(s2);
-    })
-    .map(s -> {
-        System.out.println("map: " + s);
-        return s.toUpperCase();
-    })
-    .forEach(s -> System.out.println("forEach: " + s));
-*/
+ Stream.of("d2", "a2", "b1", "b3", "c")
+     .filter(s -> {
+         System.out.println("filter: " + s);
+         return s.startsWith("a");
+     })
+     .sorted((s1, s2) -> {
+         System.out.printf("sort: %s; %s\n", s1, s2);
+         return s1.compareTo(s2);
+     })
+     .map(s -> {
+         System.out.println("map: " + s);
+         return s.toUpperCase();
+     })
+     .forEach(s -> System.out.println("forEach: " + s));
+ */
 scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { s =>
-           println("filter: " + s)
-           s.startsWith("a")
-       } sorted { (s1, s2) =>
-           println(f"sort: $s1%s; $s2%s\n")
-           s1.compareTo(s2)
-       } map { s =>
-           println("map: " + s)
-           s.toUpperCase
-       } forEach { s =>
-           println("forEach: " + s)
-       }
+            println("filter: " + s)
+            s.startsWith("a")
+        } sorted { (s1, s2) =>
+            println(f"sort: $s1%s; $s2%s\n")
+            s1.compareTo(s2)
+        } map { s =>
+            println("map: " + s)
+            s.toUpperCase
+        } forEach { s =>
+            println("forEach: " + s)
+        }
 filter: d2
 filter: a2
 filter: b1
@@ -375,6 +379,7 @@ filter: b3
 filter: c
 map: a2
 forEach: A2
+
 ```
 
 
@@ -382,17 +387,20 @@ forEach: A2
 
 
 ## SAM Synthesis
+
 ```scala
-scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { s => 
-         println(s"filter: $s"); true
-       }
+// When you say
+Stream of ("d2", "a2", "b1", "b3", "c") filter { s =>
+   println(s"filter: $s"); true
+}
 
-// Behind the scenes, scalac generated:
-scala> Stream of ("d2", "a2", "b1", "b3", "c") filter { 
-    def test$body(s: String): Boolean = println(s"filter: $s"); true
+// scalac generates
+Stream of ("d2", "a2", "b1", "b3", "c") filter {
+   def test$body(s: String) = { println(s"filter: $s"); true }
 
-    new Predicate { def test(s: String): Boolean = test$body(s) }
-  }
+   // compiles to invokedynamic of LambdaMetaFactory:
+   (s: String) => test$body(s) //: Predicate, sam = `test`
+}
 ```
 
 
