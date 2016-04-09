@@ -62,6 +62,10 @@ body {
   text-shadow: none;
   word-wrap: break-word; }
 
+.reveal .orange {
+  color: #ff931e;
+}
+
 .reveal .red {
   color: #D64546;
 }
@@ -71,7 +75,7 @@ body {
 }
 
 .reveal h1 {
-  color: #D64546;
+  color: #ff931e;
   font-size: 2.5em;
 }
 
@@ -99,10 +103,13 @@ section.scaladays a:hover {
   font-size: 1.6em; }
 
 .reveal h3 {
+  color: #ff931e;
   font-size: 1.3em; }
 
 .reveal h4 {
   font-size: 1em; }
+
+.reveal h5 {  color: #ff931e; }
 
 .reveal h1 {
   text-shadow: none; }
@@ -181,14 +188,10 @@ section.scaladays a:hover {
   font-style: italic; }
 
 .reveal pre {
-  display: block;
-  position: relative;
-  width: 90%;
-  margin: 20px auto;
   text-align: left;
-  font-size: 0.75em;
+  font-size: 0.7em;
   font-family: monospace;
-  line-height: 1.2em;
+  line-height: 1.1em;
   word-wrap: break-word;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }
 
@@ -200,7 +203,8 @@ section.scaladays a:hover {
   display: block;
   padding: 5px;
   overflow: auto;
-  max-height: 400px;
+  max-height: 600px;
+  max-width: 950px;
   word-wrap: normal;
   background: #3F3F3F;
   color: #DCDCDC; }
