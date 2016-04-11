@@ -117,8 +117,8 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 ### By @lrytz <small>(started by Miguel Garcia)</small>
 
 * GenBCode ASM-based backend
-* Inline from classes/objects/traits ([scala/scala#4711](https://github.com/scala/scala/issues/4711))
-* Eliminate: closures ([scala/scala-dev#14](https://github.com/scala/scala-dev/issues/14)), box/unbox ([scala/scala#4858](https://github.com/scala/scala/issues/4858)),...
+* Inline from classes/objects/traits ([#4711](https://github.com/scala/scala/issues/4711))
+* Eliminate: closures ([scala/scala-dev#14](https://github.com/scala/scala-dev/issues/14)), box/unbox ([#4858](https://github.com/scala/scala/issues/4858)),...
 * Inliner scope configurable: project, classpath
 * See ["The new Optimizer in Scala 2.12"](https://dl.dropboxusercontent.com/u/4881107/website/scala-user-group-2016.pdf) at Zurich-Scala
 
@@ -268,7 +268,7 @@ Sorry, Andrew & Nermin!
 #### 2.11.5 (`-Xexperimental`)
   - Scala λ assignable to Java 8 λ
   - Call Java 8 API from Scala
-  - Also uses INDY since M4 ([scala/scala#4971](https://github.com/scala/scala/issues/4971))
+  - Also uses INDY since M4 ([#4971](https://github.com/scala/scala/issues/4971))
   - TODO: type inference & Java wildcards...
 
 </script></section> <section data-markdown><script type="text/template">
@@ -395,32 +395,93 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter { s =>
    println(s"filter: $s"); true
 }
 
-// scalac generates
+// uncurry hears
 Stream of ("d2", "a2", "b1", "b3", "c") filter {
    def test$body(s: String) = { println(s"filter: $s"); true }
 
-   // compiles to invokedynamic of LambdaMetaFactory:
+   // genbcode emits invokedynamic of LambdaMetaFactory:
    (s: String) => test$body(s) //: Predicate, sam = `test`
 }
 ```
 
 </script></section> <section data-markdown><script type="text/template">
 
-## SAM gotchas TODO
- - LMF v static expansion
- - overloading
+## Sammy in action
+```scala
+scala> trait MySam { def apply(x: Int): String }
+defined trait MySam
+
+scala> val sammy: MySam = _.toString
+sammy: MySam = $$Lambda$1059/1843368112@57536d79
+```
 
 </script></section> <section data-markdown><script type="text/template">
 
-## Trait encoding TODO
-  - needs magic for fields, super calls, initialization, extending class, forwarders
+## Implicit doesn't kick in
 
+```scala
+implicit def unused(fun: Int => String): MySam
+  = new MySam { def apply(x: Int) = fun(x) }
 
+val sammy: MySam = (x: Int) => x.toString
+```
 
-</script></section>  </section>
+</script></section> <section data-markdown><script type="text/template">
+
+## Overloads break inference
+
+```scala
+class C[V] {
+def sort(cmp: java.util.Comparator[V]): C[V] = ???
+def sort(cmp: (V, V) => Int): C[V] = sort(new java.util.Comparator[V] {
+    def compare(a: V, b: V): Int = cmp(a, b)
+  })
+}
+
+(new C[Int]) sort (_ - _) // error
+(new C[Int]) sort ((_ - _) : java.util.Comparator[Int]) // ok
+(new C[Int]) sort ((a: Int, b: Int) => a - b)  // ok
+```
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Other SAM gotchas
+ - LMF v static expansion
+ - specialization leaves the generic method abstract
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Trait encoding [#5003](https://github.com/scala/scala/pull/5003)
+### by @retronym, since M4
+  - `trait` compiles to Java 8 `interface`
+  - before, to pure interface & implementation class
+  - subclasses of traits may need glue code mixed in
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Traits compiler magic
+  - fields
+  - init effects
+  - super calls
+  - extending class
+  - forwarders (for linearization)
+
+</script></section> <section data-markdown><script type="text/template">
+
+## No more implementation classes
+### INDY for caching [#4896](https://github.com/scala/scala/pull/4896)
+  - cache in static field replaced by invokedynamic
+  - at call-site linking, result stored in the `CallSite`
+  - for e.g., symbol literals, structural call site
+  - <small>PS: usable from macro, to e.g., cache compiled regexes (see PR)</small>
+
+</script></section>
+
+</section>
 <!- --------------------- WHAT'S IN FP ----------------------------------------------- -->
-<section> <section data-markdown><script type="text/template">
+<section>
 
+<section data-markdown><script type="text/template">
 
 # My Idea of FP
 
@@ -451,9 +512,9 @@ Stream of ("d2", "a2", "b1", "b3", "c") filter {
 
 </script></section> <section data-markdown><script type="text/template">
 
-##   Everything is an expression
+##  Everything is an expression
   - functions abstract over expressions
-  - statements == expressions `: Unit`
+  - statement == expression `: Unit`
   - `-->` function types uniform
 
 </script></section> <section data-markdown><script type="text/template">
