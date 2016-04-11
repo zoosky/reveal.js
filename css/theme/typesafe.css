@@ -283,6 +283,11 @@ section.scaladays a:hover {
 /*********************************************
  * NAVIGATION CONTROLS
  *********************************************/
+.reveal .controls {
+  bottom: 14px;
+  right: 28px;
+}
+
 .reveal .controls .navigate-left, .reveal .controls .navigate-left.enabled {
   border-right-color: #489DBD; }
 
