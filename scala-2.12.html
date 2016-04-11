@@ -153,8 +153,8 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 
 ### Investing in opening up
   - Scala Center!
-  - Standard sbt build (WIP)
   - PR validation on EC2 ([scala/scala-jenkins-infra](https://github.com/scala/scala-jenkins-infra))
+  - Standard sbt build (WIP)
   - Modularization (more to come in 2.13)
     - community owned (merge PRs, push tag to release)
     - smaller core to standardize & stabilize
@@ -194,7 +194,7 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 </script></section> <section data-markdown><script type="text/template">
 
 # Macros: `scala.meta`?
-  - Not sure yet what dotty will bring.
+  - Not sure yet what future will bring.
   - Only use macros when all else fails...
 
 </script></section> <section data-markdown><script type="text/template">
@@ -204,9 +204,10 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 </script></section> <section data-markdown><script type="text/template">
 
 ## Rework back-end (see [dotty](https://github.com/lampepfl/dotty))
-  - keep front-end for source compatibility
-  - faster compiler
-  - improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M) with TASTY?
+  - Keep front-end for source compatibility
+  - Preview breaking changes with flag, deprecation
+  - Faster compiler
+  - Improve [binary compat](https://www.youtube.com/watch?v=g1Pqyskjx8M) with TASTY?
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -216,18 +217,19 @@ Finally, I&#x27;ll talk about the crucial ingredients of my kind of functional p
 
 ## Simpler syntax
  - Drop procedure syntax
-   - all definitions: `kw name sig [= body]`
+   - all definitions: `kw name sig [= rhs]`
  - So long, XML literals!
-   - `xml""<hello/>"""`
+   - `xml"""<hello/>"""`
  - Anyone ever use early definitions?
    - introducing: trait parameters
 
 </script></section> <section data-markdown><script type="text/template">
 
 ## Simpler semantics
- - Type members model type constructors, existentials,...
+ - Type members encode type params, existentials,...
  - No more lub blow-ups (union types as lazy lubs)
- - Built-in support for some of shapeless (`HList/HMap`)
+ - Implicits must have result types
+ - Some built-in type-level machinery (`HList/HMap`)
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -245,14 +247,31 @@ Sorry, Andrew & Nermin!
 
 </script></section> <section data-markdown><script type="text/template">
 
-# `default` methods
-#### 2.12.0-M[3, 4]
-  - Compile `trait` to `interface`
-    - Binary compat ftw
-    - So long, implementation classes!
-  - Define Java 8 API in Scala
-    - Still with care...
-  - Java 8 λ assignable-to Scala `FunctionN` (a SAM)
+## Trait encoding [#5003](https://github.com/scala/scala/pull/5003)
+### by @retronym, since M4
+  - `trait` compiles to Java 8 `interface`
+    - binary compat ftw
+    - so long, implementation classes!
+  - subclasses of traits may need glue code mixed in
+  - `FunctionN` compiles to SAM type (Java 8 λ)
+
+</script></section> <section data-markdown><script type="text/template">
+
+## Traits still slightly magical
+  - fields
+  - init effects
+  - can extend real class
+  - super follows linearization
+  - forwarders (for linearization)
+
+</script></section> <section data-markdown><script type="text/template">
+
+## No more implementation classes
+### INDY for caching [#4896](https://github.com/scala/scala/pull/4896)
+  - cache in static field replaced by invokedynamic
+  - at call-site linking, result stored in the `CallSite`
+  - for e.g., symbol literals, structural call site
+  - <small>AST to emit INDY available to macro -- e.g., cache compiled regexes (see PR)</small>
 
 </script></section> <section data-markdown><script type="text/template">
 
@@ -417,7 +436,7 @@ sammy: MySam = $$Lambda$1059/1843368112@57536d79
 
 </script></section> <section data-markdown><script type="text/template">
 
-## Implicit doesn't kick in
+## Implicit no longer kicks in
 
 ```scala
 implicit def unused(fun: Int => String): MySam
@@ -432,14 +451,15 @@ val sammy: MySam = (x: Int) => x.toString
 
 ```scala
 class C[V] {
-def sort(cmp: java.util.Comparator[V]): C[V] = ???
-def sort(cmp: (V, V) => Int): C[V] = sort(new java.util.Comparator[V] {
-    def compare(a: V, b: V): Int = cmp(a, b)
-  })
+  def sort(cmp: java.util.Comparator[V]): C[V] = ???
+  def sort(cmp: (V, V) => Int): C[V] = sort(
+    new java.util.Comparator[V] {
+      def compare(a: V, b: V): Int = cmp(a, b)
+    })
 }
 
 (new C[Int]) sort (_ - _) // error
-(new C[Int]) sort ((_ - _) : java.util.Comparator[Int]) // ok
+(new C[Int]) sort ((_ - _): java.util.Comparator[Int]) // ok
 (new C[Int]) sort ((a: Int, b: Int) => a - b)  // ok
 ```
 
@@ -448,32 +468,6 @@ def sort(cmp: (V, V) => Int): C[V] = sort(new java.util.Comparator[V] {
 ## Other SAM gotchas
  - LMF v static expansion
  - specialization leaves the generic method abstract
-
-</script></section> <section data-markdown><script type="text/template">
-
-## Trait encoding [#5003](https://github.com/scala/scala/pull/5003)
-### by @retronym, since M4
-  - `trait` compiles to Java 8 `interface`
-  - before, to pure interface & implementation class
-  - subclasses of traits may need glue code mixed in
-
-</script></section> <section data-markdown><script type="text/template">
-
-## Traits compiler magic
-  - fields
-  - init effects
-  - super calls
-  - extending class
-  - forwarders (for linearization)
-
-</script></section> <section data-markdown><script type="text/template">
-
-## No more implementation classes
-### INDY for caching [#4896](https://github.com/scala/scala/pull/4896)
-  - cache in static field replaced by invokedynamic
-  - at call-site linking, result stored in the `CallSite`
-  - for e.g., symbol literals, structural call site
-  - <small>PS: usable from macro, to e.g., cache compiled regexes (see PR)</small>
 
 </script></section>
 
@@ -531,7 +525,8 @@ def sort(cmp: (V, V) => Int): C[V] = sort(new java.util.Comparator[V] {
 ### because optional
   - type inference >> codegen
   - types are documentation
-  - best types are unseen (e.g., definition-site variance
+  - best types are unseen
+    - e.g., definition-site variance
 
 </script></section> <section data-markdown><script type="text/template">
 
