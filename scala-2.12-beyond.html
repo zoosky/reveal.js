@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+
+<!-- print with:
+phantomjs plugin/print-pdf/print-pdf.js "file:///Users/adriaan/git/reveal.js/scala-2.12.html?print-pdf" scala-2.12.pdf 1200x800
+-->
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Scala 2.12 &amp; Beyond</title>
+
+  <meta name="description" content="Presented at Scala By the Bay, Nov 11 2016.">
+  <meta name="abstract" content="
+I'll talk about what's new in Scala 2.12, how Scala is still more suited for functional programming than Java 8, and give you a quick glimpse of what's next in Scala 2.13.
+Scala 2.12's backend takes full advantage of the improved support for functional programming on the Java 8 platform.
+Little has changed on the outside since Scala 2.11, but we have given the compiler internals a significant overhaul.
+Additionally, Scala 2.12 ships with a new optimizer! In this talk, we'll see how Scala functions compile to the same byte code as in Java 8
+and explain the simplified encoding of Scala traits as Java 8 interfaces.
+
+We'll also look at the cohesive set of language features and design principles that make functional programming such a joy in Scala.
+  <meta name="author" content="Adriaan Moors">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/typesafe.css" id="theme">
+
+  <!-- Code syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+<div class='footer'><img style="height:1.5em; opacity: 0.66" src="images/lightbend-color-reverse.svg" title="Lightbend"> </img></div>
+
+<div class="slides">
+
+<section>
+<h2>Scala 2.12 &amp; Beyond</h2>
+<!-- <h3 class="orange"></h3> -->
+<h4 style="margin-top:75px">Adriaan <a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a> Moors</h4>
+<h5 class="orange">Scala Team Lead</h5>
+<h5 style="opacity: 0.75">adriaanm.github.io/reveal.js/scala-2.12-beyond.html</h5>
+</section>
+
+
+<section>
+<img src="images/lightbend-color-reverse.svg" title="Lightbend" width="66%"></img>
+</section>
+
+
+
+
+
+
+
+<section>
+<section data-markdown><script type="text/template">
+#  🎊 2.12.0 🎉
+
+</script></section><section data-markdown><script type="text/template">
+# Contributors
+## Community: 32%
+#### EPFL: 4%
+### Massive Thank You!
+
+<small><https://github.com/scala/scala/graphs/contributors?from=2014-11-01&to=2016-10-29&type=c></small>
+
+</script></section><section data-markdown><script type="text/template">
+### Lightbend Scala Team: 64%
+#### Stefan Zeiger
+#### Seth Tisue
+#### Lukas Rytz
+#### Jason Zaugg
+#### me
+
+
+</script></section></section>
+
+<section>
+<section data-markdown><script type="text/template">
+
+# Release Cadence
+## 1 every 6 weeks
+
+</script></section><section data-markdown><script type="text/template">
+### 2015
+  - 2.11.5, 2.11.6, 2.10.5
+  - 2.12.0-M1, 2.11.7
+  - 2.12.0-M2, 2.10.6
+  - 2.12.0-M3
+
+</script></section><section data-markdown><script type="text/template">
+### 2016
+  - 2.11.8, 2.12.0-M4
+  - 2.12.0-M5
+  - 2.12.0-RC1
+  - 2.12.0-RC2, 2.12.0
+
+</script></section><section data-markdown><script type="text/template">
+### 2016.tail
+  - 2.12.1
+  - 2.11.9 (last 2.11)
+
+</script></section><section data-markdown><script type="text/template">
+### 2017
+  - quarterly 2.13 milestones
+  - 2.12.x
+
+
+</script></section></section>
+
+<section>
+<section data-markdown><script type="text/template">
+
+# Scala 2.12
+## Overview
+
+
+</script></section><section data-markdown><script type="text/template">
+## Compiling to JVM 8!
+### Trait = interface + default method
+### Function = SAM instance via INDY
+
+
+</script></section><section data-markdown><script type="text/template">
+## New Backend & Optimizer!
+  - GenBCode ASM-based backend
+  - Inline from classes/objects/traits [#4711](https://github.com/scala/scala/issues/4711)
+  - Eliminate: [closures](https://github.com/scala/scala-dev/issues/14), [box/unbox](https://github.com/scala/scala/issues/4858),...
+  - For details, see Lukas's talks
+    - Tales from Compiling to the JVM at Scala World 2016 – [slides](https://dl.dropboxusercontent.com/u/4881107/website/scala-world-2016.pdf) [video](https://www.youtube.com/watch?v=H3hPWvZtF4A)
+    - ["The new Optimizer in Scala 2.12"](https://dl.dropboxusercontent.com/u/4881107/website/scala-user-group-2016.pdf) at Zurich-Scala
+
+
+</script></section><section data-markdown><script type="text/template">
+## Scaladoc
+  - Modern look
+  - Documents Java sources
+
+
+</script></section><section data-markdown><script type="text/template">
+## REPL
+  - Better tab completion (same as IDE/ENSIME)
+  - `-Dscala.color`
+
+
+</script></section><section data-markdown><script type="text/template">
+## Library
+  - `Either` is now right-biased
+  - [scala/scala-java8-compat](https://github.com/scala/scala-java8-compat)
+  - must have `withFilter` for `for`
+
+
+</script></section><section data-markdown><script type="text/template">
+## Misc
+  - Now built with sbt!!
+  - New fields phase, post-typer phases simplified
+  - Method lazy val more compact
+  - Thanks to dotty for inspiration!
+
+
+
+</script></section><section data-markdown><script type="text/template">
+## Sbt improvements (0.13.13)
+  - Class-based name hashing [sbt/sbt#1104](https://github.com/sbt/sbt/issues/1104)
+  - More efficient IO for analysis [sbt/sbt#2525](https://github.com/sbt/sbt/issues/2525)
+  - Faster compilation [sbt/sbt#2754](https://github.com/sbt/sbt/pull/2754)
+
+
+</script></section></section>
+
+<section>
+<section data-markdown><script type="text/template">
+
+# Scala 2.13
+## Library release
+## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
+## RC1: Q1 2018?
+
+
+</script></section><section data-markdown><script type="text/template">
+# Simpler Collections
+## Fix common gotchas
+## Refactor
+#### Minimize impact regular users
+#### Inheritance hierarchy will change
+
+
+
+</script></section><section data-markdown><script type="text/template">
+# Modularization part 2
+
+
+</script></section><section data-markdown><script type="text/template">
+# Simplify Language
+ - Trait parameters
+ - Deprecate
+   - early initializers
+   - procedure syntax
+   - `implicit` without signature
+ - Rewrite tool
+
+
+
+</script></section></section>
+
+<section>
+<section data-markdown><script type="text/template">
+
+# My Idea of FP
+
+</script></section><section data-markdown><script type="text/template">
+## OO's complement
+#### *Small* units of functionality over *known* set of types
+
+</script></section><section data-markdown><script type="text/template">
+## My idea of P
+### Express, Understand & Maintain
+  - divide & conquer
+  - purity for understanding, not godliness
+  - (de/re)compose safely, guided by types
+
+</script></section><section data-markdown><script type="text/template">
+## Abstractions: just right
+  - decouple: functions / objects
+  - couple: uniform nesting (e.g., local methods)
+  - don't overdo it
+
+</script></section><section data-markdown><script type="text/template">
+## `val` is your friend
+  - immutable first, `var` within reach
+
+</script></section><section data-markdown><script type="text/template">
+##  Everything is an expression
+  - functions abstract over expressions
+  - statement == expression `: Unit`
+  - `-->` function types uniform
+
+</script></section><section data-markdown><script type="text/template">
+##  Patterns for destruction
+  - analysis of input determines output
+  - cover your cases
+  - often, domain doesn't change that quickly
+  - when it does, subtypes within reach
+
+</script></section><section data-markdown><script type="text/template">
+## Type ascription 2nd
+### because optional
+  - type inference >> codegen
+  - types are documentation
+  - best types are unseen
+    - e.g., definition-site variance
+
+</script></section><section data-markdown><script type="text/template">
+##  How I stopped worrying about variance
+### "Just add +/- until it compiles." --me
+
+</script></section><section data-markdown><script type="text/template">
+## Function subtyping
+#### Java: `Function`'s users must encode expected subtyping
+```java
+<R> Stream<R> map(Function<? super T, ? extends R> mapper)
+```
+#### Scala: `=>` said how type arguments determine subtyping
+```scala
+def map[R](mapper: T => R): Stream[R]
+```
+
+
+</script></section></section>
+
+<section>
+<section data-markdown><script type="text/template">
+
+# 2.12 ❤️ Java 8
+
+
+</script></section><section data-markdown><script type="text/template">
+# Trait encoding [#5003](https://github.com/scala/scala/pull/5003)
+  - `trait` compiles to Java 8 `interface`
+    - binary compat ftw
+    - so long, implementation classes!
+  - subclasses of traits may need glue code mixed in
+  - `FunctionN` compiles to SAM type (Java 8 λ)
+
+</script></section><section data-markdown><script type="text/template">
+## Traits still slightly magical
+  - fields & other init effects
+  - can extend real class
+  - super follows linearization
+  - forwarders (for linearization & jvm perf)
+
+
+</script></section><section data-markdown><script type="text/template">
+## No more implementation classes
+### INDY for caching [#4896](https://github.com/scala/scala/pull/4896)
+  - cache in static field replaced by invokedynamic
+  - at call-site linking, result stored in the `CallSite`
+  - for e.g., symbol literals, structural call site
+  - <small>AST to emit INDY available to macro -- e.g., cache compiled regexes (see PR)</small>
+
+
+</script></section><section data-markdown><script type="text/template">
+# INDY-λ
+ 1. scalac λ bytecode mimics javac's
+ 1. ride JIT perf tuning wave
+ 1. profit
+
+
+</script></section><section data-markdown><script type="text/template">
+# Single Abstract Method
+  - Scala λ assignable to Java 8 λ
+  - Call Java 8 API from Scala
+  - Also uses INDY since M4 [#4971](https://github.com/scala/scala/issues/4971)
+  - but wildcards...
+
+
+</script></section><section data-markdown><script type="text/template">
+## Overloads
+```scala
+class C[V] {
+  def sort(cmp: (V, V) => Int): C[V] = ???
+  def sort(cmp: java.util.Comparator[V]): C[V] = ???
+} ; val c: C[Int] = ???
+
+c sort (_ - _)
+c sort ((a: Int, b: Int) => a - b)
+c sort ((_ - _): java.util.Comparator[Int])
+```
+
+
+</script></section><section data-markdown><script type="text/template">
+## Gotcha
+  - Lambda body in method of enclosing class
+  - Before, in its own anonymous class
+  - Can result in deadlock, accidental outer capture
+
+
+</script></section><section data-markdown><script type="text/template">
+## Example
+  - Original: http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
+  - Full translation: https://gist.github.com/adriaanm/892d6063dd485d7dd221
+
+</script></section><section data-markdown><script type="text/template">
+
+```scala
+scala> import java.util.{Arrays, List, ArrayList}
+scala> import java.util.stream.{Stream, IntStream}
+scala> val myList = Arrays.asList("a1", "a2", "b1", "c2", "c1")
+
+scala> myList.stream.filter(s => s.startsWith("c")).
+  map(_.toUpperCase).
+  sorted.
+  forEach(println)
+
+scala> Arrays.asList("a1", "a2", "a3").stream.
+  findFirst.
+  ifPresent(println)
+
+scala> Stream.of("a1", "a2", "a3").
+  findFirst.
+  ifPresent(println)
+
+scala> IntStream.range(1, 4).forEach(println)
+
+scala> Arrays.stream(Array(1, 2, 3)).
+  map(n => 2 * n + 1).average.
+  ifPresent(println)
+
+scala> Stream.of("a1", "a2", "a3").
+  map(_.substring(1)).
+  mapToInt(Integer.parseInt).max.ifPresent(println)
+<console>:14: error: type mismatch;
+ found   : (x$1: String)Int <and> (x$1: String, x$2: Int)Int
+ required: java.util.function.ToIntFunction[? >: ?0]
+       Stream.of("a1", "a2", "a3").map(_.substring(1)).mapToInt(Integer.parseInt).max.ifPresent(println)
+                                                                        ^
+scala> Stream.of("a1", "a2", "a3").
+  map[String](_.substring(1)).
+  mapToInt(Integer.parseInt).max.ifPresent(println)
+3
+```
+
+</script></section></section>
+
+
+
+
+<section>
+<H3>Thanks!</H3>
+<H2>Questions!</H2>
+<h4><a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a></h4>
+</section>
+
+</div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  // Full list of configuration options available at:
+  // https://github.com/hakimel/reveal.js#configuration
+  Reveal.initialize({
+    controls: true,
+    progress: true,
+    slideNumber: true,
+    history: true,
+    center: true,
+    help: true,
+    transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+    // Optional reveal.js plugins
+    dependencies: [
+      { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return true; }, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true }
+    ]
+  });
+
+</script>
+</body>
+</html>
