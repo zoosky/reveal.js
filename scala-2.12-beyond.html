@@ -95,6 +95,16 @@ We'll also look at the cohesive set of language features and design principles t
 
 
 </script></section><section data-markdown><script type="text/template">
+### Scala Center
+  - Empower Community
+    - Two community board representatives
+  - OSS development
+    - Scaladex, Scalafix
+  - Education
+    - Coursera
+
+
+</script></section><section data-markdown><script type="text/template">
 
 # Release Cadence
 ## 1 every 6 weeks
@@ -167,18 +177,25 @@ We'll also look at the cohesive set of language features and design principles t
   - [scala/scala-java8-compat](https://github.com/scala/scala-java8-compat)
   - must have `withFilter` for `for`
 
-
 </script></section><section data-markdown><script type="text/template">
-## Misc
-  - Now built with sbt!!
-  - New fields phase, post-typer phases simplified
-  - Method `lazy val` more compact
-  - Thank you, dotty team for inspiration!
-
+## Contributor's experience
+### sbt build!
+### Open & timely communication
+### Growing number of contributors!
 
 
 </script></section><section data-markdown><script type="text/template">
-## Sbt improvements (0.13.13)
+## Inspiration from dotty
+  - `trait` & λ encoding
+  - Signature inference for `val`
+  - Infer H-O fun arg types of overloaded method [#5307](https://github.com/scala/scala/pull/5307)
+  - Method `lazy val` more compact [#5294](https://github.com/scala/scala/pull/5294)
+  - fields phase (+ simplified post-typer phases) [#5141](https://github.com/scala/scala/pull/5141)
+
+
+
+</script></section><section data-markdown><script type="text/template">
+## sbt improvements (0.13.13)
   - Class-based name hashing [sbt/sbt#1104](https://github.com/sbt/sbt/issues/1104)
   - More efficient IO for analysis [sbt/sbt#2525](https://github.com/sbt/sbt/issues/2525)
   - Faster compilation [sbt/sbt#2754](https://github.com/sbt/sbt/pull/2754)
@@ -220,16 +237,16 @@ We'll also look at the cohesive set of language features and design principles t
    - early initializers
    - procedure syntax
    - `implicit` without signature
- - Rewrite tool
+ - Scalafix
 
 </script></section><section data-markdown><script type="text/template">
 # Wish list
 
-</script></section><section data-markdown><script type="text/template">  
+</script></section><section data-markdown><script type="text/template">
 ### Improve errors
   - nicer messages
   - configurable reporting (e.g. deprecation)
-  
+
 </script></section><section data-markdown><script type="text/template">
 ### REPL polish
   - syntax highlighting
@@ -245,8 +262,8 @@ We'll also look at the cohesive set of language features and design principles t
  - version usage statistics
 
 </script></section><section data-markdown><script type="text/template">
-### Rewrite tool
-  - for upgrade from 2.12
+### Scalafix
+  - use for upgrade to 2.13
   - procedure syntax
   - add sigs for implicits (& non-private members?)
 
@@ -284,12 +301,12 @@ We'll also look at the cohesive set of language features and design principles t
   - functions abstract over expressions
   - statement is expression `: Unit`
   - `Unit` is type subject to polymorphism
-  - ⇒ function types uniform
+  - ⟹ function types uniform
 
 </script></section><section data-markdown><script type="text/template">
 ## `val` is your friend
   - immutable first, `var` within reach
-  - immutability ⇒ isolation in time
+  - immutability ⟹ isolation in time
 
 </script></section><section data-markdown><script type="text/template">
 ## Case classes construct
@@ -308,7 +325,7 @@ We'll also look at the cohesive set of language features and design principles t
 
 </script></section><section data-markdown><script type="text/template">
 ##  How I stopped worrying about variance
-### "Just add +/- until it compiles." 
+### "Just add +/- until it compiles."
 ### <div style="text-align: right;">-- me</div>
 
 </script></section><section data-markdown><script type="text/template">
@@ -336,39 +353,35 @@ def map[R](mapper: T => R): Stream[R]
   - `trait` compiles to Java 8 `interface`
     - binary compat ftw
     - so long, implementation classes!
-  - subclasses of traits may need glue code mixed in
   - `FunctionN` compiles to SAM type (Java 8 λ)
 
 </script></section><section data-markdown><script type="text/template">
-## Traits still slightly magical
+# Mixing in trait: glue
   - fields & other init effects
-  - can extend real class
-  - super follows linearization
+  - `trait extends class`
+  - `super` call ⟹ accessor
   - forwarders (for linearization & jvm perf)
 
 
 </script></section><section data-markdown><script type="text/template">
-## No more implementation classes
-### INDY for caching [#4896](https://github.com/scala/scala/pull/4896)
-  - cache in static field replaced by invokedynamic
-  - at call-site linking, result stored in the `CallSite`
-  - for e.g., symbol literals, structural call site
-  - <small>AST to emit INDY available to macro -- e.g., cache compiled regexes (see PR)</small>
-
-
-</script></section><section data-markdown><script type="text/template">
-# INDY-λ
+# INDY-λ [#4463](https://github.com/scala/scala/pull/4463)
  1. scalac λ bytecode mimics javac's
  1. ride JIT perf tuning wave
  1. profit
 
 
+ </script></section><section data-markdown><script type="text/template">
+ ## Gotcha
+   - Lambda body in method of enclosing class
+   - Before, in its own anonymous class
+   - Can result in deadlock, accidental outer capture
+
 </script></section><section data-markdown><script type="text/template">
 # Single Abstract Method
-  - Scala λ assignable to Java 8 λ
-  - Call Java 8 API from Scala
-  - Also uses INDY since M4 [#4971](https://github.com/scala/scala/issues/4971)
-  - but wildcards...
+  - Unify FunctionN and SAM types
+  - Scala 2.12 ↔ Java 8 λ-interop
+  - But wildcards...
+  - [#3018](https://github.com/scala/scala/pull/3018) [#4971](https://github.com/scala/scala/issues/4971)
 
 
 </script></section><section data-markdown><script type="text/template">
@@ -384,14 +397,6 @@ c sort (_ - _)
 c sort ((a: Int, b: Int) => a - b)
 c sort ((_ - _): java.util.Comparator[Int])
 ```
-
-
-</script></section><section data-markdown><script type="text/template">
-## Gotcha
-  - Lambda body in method of enclosing class
-  - Before, in its own anonymous class
-  - Can result in deadlock, accidental outer capture
-
 
 </script></section><section data-markdown><script type="text/template">
 ## Example
@@ -444,10 +449,22 @@ scala> Stream.of("a1", "a2", "a3").
 
 
 <section>
-<H3>Thanks!</H3>
-<H2>Questions!</H2>
-<h4><a style="opacity:0.75" href="http://twitter.com/adriaanm">@adriaanm</a></h4>
-</section>
+
+<section data-markdown><script type="text/template">
+# Grateful
+## Contributors
+## Community
+## Scala Center
+## Inspiration from dotty
+
+</script></section>
+
+<section data-markdown><script type="text/template">
+# Thank you
+## Questions!
+<span style="opacity:0.75">[@adriaanm](http://twitter.com/adriaanm)</span>
+</script></section>
+
 
 </div>
 </div>
