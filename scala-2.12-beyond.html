@@ -97,7 +97,7 @@ We'll also look at the cohesive set of language features and design principles t
 </script></section><section data-markdown><script type="text/template">
 ### Scala Center
   - Empower Community
-    - Two community board representatives
+    - Community rep: Bill Venners, Lars Hupel
   - OSS development
     - Scaladex, Scalafix
   - Education
@@ -274,54 +274,26 @@ We'll also look at the cohesive set of language features and design principles t
 
 </script></section></section>
 
+
 <section>
 <section data-markdown><script type="text/template">
 
-# My Idea of FP
+# 2.12 ❤️ Java 8
+
 
 </script></section><section data-markdown><script type="text/template">
-## OO's complement
-#### *Small* units of functionality over *known* set of types
+# FP >> Java + λ
+  - encourage immutability (isolation in time)
+  - expression-based (computation = data)
+  - case classes and pattern matching
+    - comprehensively deal with structured data
+  - intuitive, functional-by-design collections
 
 </script></section><section data-markdown><script type="text/template">
-## My idea of P
-### Express, Understand & Maintain
-  - divide & conquer
-  - purity for understanding, not godliness
-  - (de/re)compose safely, guided by types
-
-</script></section><section data-markdown><script type="text/template">
-## Abstractions: just right
-  - decouple: functions / objects
-  - couple: uniform nesting (e.g., local methods)
-  - don't overdo it
-
-</script></section><section data-markdown><script type="text/template">
-##  Everything is an expression
-  - functions abstract over expressions
-  - statement is expression `: Unit`
-  - `Unit` is type subject to polymorphism
-  - ⟹ function types uniform
-
-</script></section><section data-markdown><script type="text/template">
-## `val` is your friend
-  - immutable first, `var` within reach
-  - immutability ⟹ isolation in time
-
-</script></section><section data-markdown><script type="text/template">
-## Case classes construct
-## Patterns destruct
-  - cover your cases
-  - often, domain doesn't change that quickly
-  - when it does, subtypes within reach
-
-</script></section><section data-markdown><script type="text/template">
-## Type ascription 2nd
-### because optional
-  - type inference >> codegen
-  - types are documentation
-  - best types are unseen
-    - e.g., definition-site variance
+## Type inference
+  - safety & maintainability behind scenes
+  - public types are documentation
+  - ↔ codegen: maintenance liability
 
 </script></section><section data-markdown><script type="text/template">
 ##  How I stopped worrying about variance
@@ -330,23 +302,16 @@ We'll also look at the cohesive set of language features and design principles t
 
 </script></section><section data-markdown><script type="text/template">
 ## Function subtyping
-#### Java: `Function`'s users must encode expected subtyping
-```java
-<R> Stream<R> map(Function<? super T, ? extends R> mapper)
-```
-#### Scala: `=>` said how type arguments determine subtyping
+### Scala: definition encapsulates <: rules
 ```scala
 def map[R](mapper: T => R): Stream[R]
 ```
-
-
-</script></section></section>
-
-<section>
-<section data-markdown><script type="text/template">
-
-# 2.12 ❤️ Java 8
-
+<div>&nbsp;</div>
+### Wildcards: users encode <: rules
+```java
+<R> Stream<R> map(Function<? super T, ? extends R> mapper)
+```
+### Over, and over
 
 </script></section><section data-markdown><script type="text/template">
 # Trait encoding [#5003](https://github.com/scala/scala/pull/5003)
