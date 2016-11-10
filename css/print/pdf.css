@@ -153,8 +153,7 @@ ul, ol, div, p {
 
 /* Display slide numbers when 'slideNumber' is enabled */
 .reveal .slide-number-pdf {
-	display: block;
+        display: none;
 	position: absolute;
 	font-size: 14px;
 }
-
