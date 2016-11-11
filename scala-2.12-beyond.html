@@ -12,13 +12,13 @@ phantomjs plugin/print-pdf/print-pdf.js "file:///Users/adriaan/git/reveal.js/sca
 
   <meta name="description" content="Presented at Scala By the Bay, Nov 11 2016.">
   <meta name="abstract" content="
-I'll talk about what's new in Scala 2.12, how Scala is still more suited for functional programming than Java 8, and give you a quick glimpse of what's next in Scala 2.13.
-Scala 2.12's backend takes full advantage of the improved support for functional programming on the Java 8 platform.
+I&#x27;ll talk about what&#x27;s new in Scala 2.12, how Scala is still more suited for functional programming than Java 8, and give you a quick glimpse of what&#x27;s next in Scala 2.13.
+Scala 2.12&#x27;s backend takes full advantage of the improved support for functional programming on the Java 8 platform.
 Little has changed on the outside since Scala 2.11, but we have given the compiler internals a significant overhaul.
-Additionally, Scala 2.12 ships with a new optimizer! In this talk, we'll see how Scala functions compile to the same byte code as in Java 8
+Additionally, Scala 2.12 ships with a new optimizer! In this talk, we&#x27;ll see how Scala functions compile to the same byte code as in Java 8
 and explain the simplified encoding of Scala traits as Java 8 interfaces.
 
-We'll also look at the cohesive set of language features and design principles that make functional programming such a joy in Scala.
+We&#x27;ll also look at the cohesive set of language features and design principles that make functional programming such a joy in Scala.">"
   <meta name="author" content="Adriaan Moors">
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,81 +201,10 @@ We'll also look at the cohesive set of language features and design principles t
   - Faster compilation [sbt/sbt#2754](https://github.com/sbt/sbt/pull/2754)
 
 
+
 </script></section>
+
 </section><section>
-<section data-markdown><script type="text/template">
-
-# Scala 2.13
-### *Tentatively*
-
-</script></section><section data-markdown><script type="text/template">
-## Library release
-## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
-## RC1: Q1 2018?
-
-
-</script></section><section data-markdown><script type="text/template">
-# Simpler Collections
-## Fix common gotchas
-## Refactor
-#### Minimize impact on most users
-#### Inheritance hierarchy *will* change
-
-
-
-</script></section><section data-markdown><script type="text/template">
-# Modularization part 2
-## IO
-## Parallel collections
-## JSON
-## Allow opting out of old stuff
-
-</script></section><section data-markdown><script type="text/template">
-# Simplify Language
- - Trait parameters
- - Deprecate
-   - early initializers
-   - procedure syntax
-   - `implicit` without signature
- - Scalafix
-
-</script></section><section data-markdown><script type="text/template">
-# Wish list
-
-</script></section><section data-markdown><script type="text/template">
-### Improve errors
-  - nicer messages
-  - configurable reporting (e.g. deprecation)
-
-</script></section><section data-markdown><script type="text/template">
-### REPL polish
-  - syntax highlighting
-  - class-based wrapping
-  - improve embeddability
-  - take advantage of Java 9
-
-</script></section><section data-markdown><script type="text/template">
-### sbt launcher consolidation
- - improved getting started experience
- - provide custom default dependencies
- - auto upgrades
- - version usage statistics
-
-</script></section><section data-markdown><script type="text/template">
-### Scalafix
-  - use for upgrade to 2.13
-  - procedure syntax
-  - add sigs for implicits (& non-private members?)
-
-</script></section><section data-markdown><script type="text/template">
-### scala-abide
-  - move linting out of compiler
-  - more extensible
-
-</script></section></section>
-
-
-<section>
 <section data-markdown><script type="text/template">
 
 # 2.12 ❤️ Java 8
@@ -408,12 +337,80 @@ scala> Stream.of("a1", "a2", "a3").
 3
 ```
 
-</script></section></section>
+</script></section>
+</section><section>
+<section data-markdown><script type="text/template">
+
+# Scala 2.13
+### *Tentatively*
+
+</script></section><section data-markdown><script type="text/template">
+## Library release
+## [scala-lang.org/news/roadmap-next](http://scala-lang.org/news/roadmap-next)
+## RC1: Q1 2018?
+
+
+</script></section><section data-markdown><script type="text/template">
+# Simpler Collections
+## Fix common gotchas
+## Refactor
+#### Minimize impact on most users
+#### Inheritance hierarchy *will* change
 
 
 
+</script></section><section data-markdown><script type="text/template">
+# Modularization part 2
+## IO
+## Parallel collections
+## JSON
+## Allow opting out of old stuff
 
-<section>
+</script></section><section data-markdown><script type="text/template">
+# Simplify Language
+ - Trait parameters
+ - Deprecate
+   - early initializers
+   - procedure syntax
+   - `implicit` without signature
+ - Scalafix
+
+</script></section><section data-markdown><script type="text/template">
+# Wishlist
+
+</script></section><section data-markdown><script type="text/template">
+### Improve errors
+  - nicer messages
+  - configurable reporting (e.g. deprecation)
+
+</script></section><section data-markdown><script type="text/template">
+### REPL polish
+  - syntax highlighting
+  - class-based wrapping
+  - improve embeddability
+  - take advantage of Java 9
+
+</script></section><section data-markdown><script type="text/template">
+### sbt launcher consolidation
+ - improved getting started experience
+ - provide custom default dependencies
+ - auto upgrades
+ - version usage statistics
+
+</script></section><section data-markdown><script type="text/template">
+### Scalafix
+  - use for upgrade to 2.13
+  - procedure syntax
+  - add sigs for implicits (& non-private members?)
+
+</script></section><section data-markdown><script type="text/template">
+### scala-abide
+  - move linting out of compiler
+  - more extensible
+
+</script></section>
+
+</section><section>
 
 <section data-markdown><script type="text/template">
 # Grateful
