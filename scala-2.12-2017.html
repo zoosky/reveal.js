@@ -403,12 +403,37 @@ scala> Stream.of("a1", "a2", "a3").
 #### Inheritance hierarchy *will* change
 
 
-</script></section><section data-markdown>
-<!-- for the collections strawman, maybe show an actual simplified CanBuildFrom-less type signature -->
-<script type="text/template">
+</script></section><section data-markdown><script type="text/template">
 ## Example
 
-TODO
+```scala
+// old:
+def map[B, That](f: A => B)(
+  implicit bf: CanBuildFrom[Repr, B, That]): That
+
+// new:
+def map[B](f: A => B): C[B] // intention much clearer
+```
+
+</script></section><section data-markdown><script type="text/template">
+## Example
+
+```scala
+// old:
+def to[Col[_]](
+  implicit cbf: CanBuildFrom[Nothing, A, Col[A @uV]]): Col[A @uV]
+
+// new:
+def to(bf: BuildFrom[Iterable[A], A]): bf.To
+
+// old call site:
+coll.to[Set]
+
+// new call site:
+coll.to(Set)
+coll.to(BitSet) // not possible before
+coll.to(Map) // not possible before
+```
 
 </script></section><section data-markdown><script type="text/template">
 # Modularization part 2
@@ -423,11 +448,14 @@ TODO
 ## Benchmarking
 ## Optimization
 
-</script></section><section data-markdown><script type="text/template">
+</script></section>
+
+<!-- <section data-markdown><script type="text/template">
 TODO
+</script></section>
+-->
 
-
-</script></section><section data-markdown><script type="text/template">
+<section data-markdown><script type="text/template">
 # User-friendliness
 
 </script></section><section data-markdown><script type="text/template">
