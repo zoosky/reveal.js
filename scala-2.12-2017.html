@@ -317,25 +317,6 @@ def map[R](mapper: T => R): Stream[R]
 
 
 </script></section><section data-markdown><script type="text/template">
-## Overloads
-```scala
-class C[V] {
-  def sort(cmp: (V, V) => Int): C[V] = ???
-  def sort(cmp: java.util.Comparator[V]): C[V] = ???
-}
-val c: C[Int] = ???
-
-c sort (_ - _)
-c sort ((a: Int, b: Int) => a - b)
-c sort ((_ - _): java.util.Comparator[Int])
-```
-
-</script></section><section data-markdown><script type="text/template">
-## Example
-  - Original: http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
-  - Full translation: https://gist.github.com/adriaanm/892d6063dd485d7dd221
-
-</script></section><section data-markdown><script type="text/template">
 
 ```scala
 scala> import java.util.{Arrays, List, ArrayList}
@@ -374,8 +355,38 @@ scala> Stream.of("a1", "a2", "a3").
   mapToInt(Integer.parseInt).max.ifPresent(println)
 3
 ```
-
 </script></section>
+
+</script></section><section data-markdown><script type="text/template">
+## Example
+  - Original: http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples
+  - Full translation: https://gist.github.com/adriaanm/892d6063dd485d7dd221
+
+
+</script></section><section data-markdown><script type="text/template">
+## Overloads
+```scala
+class C[V] {
+  def sort(cmp: (V, V) => Int): C[V] = ???
+  def sort(cmp: java.util.Comparator[V]): C[V] = ???
+}
+val c: C[Int] = ???
+
+c sort (_ - _) // types inferred in 2.12
+c sort ((a: Int, b: Int) => a - b)
+c sort ((_ - _): java.util.Comparator[Int])
+```
+
+</script></section><section data-markdown><script type="text/template">
+## Most specific overload
+The `Comparator` overload is applicable to:
+  - function literal (by sam conversion)
+  - an instance of `Comparator`
+
+The `Function2` overload is applicable to:
+  - a function literal
+  - **not** to an instance of  `Comparator`
+
 </section><section>
 <section data-markdown><script type="text/template">
 
@@ -412,7 +423,7 @@ def map[B, That](f: A => B)(
   implicit bf: CanBuildFrom[Repr, B, That]): That
 
 // new:
-def map[B](f: A => B): C[B] // intention much clearer
+def map[B](f: A => B): C[B] // intent much clearer
 ```
 
 </script></section><section data-markdown><script type="text/template">
@@ -445,15 +456,19 @@ coll.to(Map) // not possible before
 
 </script></section><section data-markdown><script type="text/template">
 # Faster Compiler
-## Benchmarking
 ## Optimization
+## Automated Benchmarking & Charting
 
 </script></section>
 
-<!-- <section data-markdown><script type="text/template">
-TODO
+<section data-markdown><script type="text/template">
+# Compiler Performance
+25% improvement from 2.10.3 to 2.12.1
+<a href="https://goo.gl/AViRa2"><img src="images/comp_perf.png" style="width: 100%;" /></a>
+
+
 </script></section>
--->
+
 
 <section data-markdown><script type="text/template">
 # User-friendliness
@@ -506,11 +521,17 @@ TODO
 
 # Scala 2.14
 ## Closer to Dotty
-### Share post-typer transformations
+### scala.meta macros
+### Share post-typer transformations & type operations
 ### TASTY
-### scala.meta
 
-</script></section><section data-markdown><script type="text/template">
+</script></section>
+<!--
+ - @static
+ - name-based patmat
+ - literal singleton types
+-->
+<section data-markdown><script type="text/template">
 ## Simplify Language
  - Trait parameters
  - Improved lazy vals & trait vals
@@ -556,7 +577,8 @@ TODO
 <img src="images/rate_app_2.png" title="Rate my talk!" style="width: 80%;" alt="Rate my talk!"/>
 </section>
 
-<section>
+<section class="nologo">
+
 <img src="images/scaladays_chicago_logo_big.png" title="Scala Days" style="width: 50%;" alt="Scala Days"/>
 </section>
 
