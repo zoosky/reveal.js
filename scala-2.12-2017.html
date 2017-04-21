@@ -2,7 +2,7 @@
 <html lang="en">
 
 <!-- print with:
-phantomjs plugin/print-pdf/print-pdf.js "file:///Users/adriaan/git/reveal.js/scala-2.12.html?print-pdf" scala-2.12.pdf 1200x800
+phantomjs plugin/print-pdf/print-pdf.js "file:///Users/adriaan/git/reveal.js/scala-2.12-2017.html?print-pdf" scala-2.12.pdf 1200x800
 -->
 
 <head>
@@ -120,7 +120,7 @@ phantomjs plugin/print-pdf/print-pdf.js "file:///Users/adriaan/git/reveal.js/sca
 </script></section><section data-markdown><script type="text/template">
 ### 2017
   - 2.11.11, 2.12.2, 2.13.0-M1
-  - (Do not use 2.11.9/2.11.0)
+  - (Do not use 2.11.9/2.11.10)
 
 
 </script></section>
@@ -298,14 +298,18 @@ def map[R](mapper: T => R): Stream[R]
   - forwarders (for linearization & jvm perf)
 
 
-</script></section><section data-markdown><script type="text/template">
+</script></section>
+ <!-- TODO  mention smaller jar size -->
+ <section data-markdown><script type="text/template">
 # INDY-λ [#4463](https://github.com/scala/scala/pull/4463)
  1. scalac λ bytecode mimics javac's
  1. ride JIT perf tuning wave
  1. profit
 
 
- </script></section><section data-markdown><script type="text/template">
+ </script></section>
+ <!-- TODO: include example from https://github.com/scala/scala-dev/issues/195 -->
+ <section data-markdown><script type="text/template">
  ## Gotcha
    - Lambda body in method of enclosing class
    - Before, in its own anonymous class
@@ -526,8 +530,9 @@ coll.to(Map) // not possible before
 # Scala 2.14
 ## Closer to Dotty
 ### scala.meta macros
-### Share post-typer transformations & type operations
 ### TASTY
+### Share post-typer transformations
+### & type operations
 
 </script></section>
 <!-- 
